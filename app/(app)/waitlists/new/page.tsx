@@ -21,8 +21,8 @@ export default function NewWaitlistPage() {
     formData.set('buttonText', state.buttonText)
     formData.set('showCount', String(state.showCount))
     formData.set('comingSoon', String(state.comingSoon))
-    formData.set('highlights', JSON.stringify(state.highlights))
-    formData.set('faq', JSON.stringify(state.faq))
+    formData.set('highlights', JSON.stringify(state.showHighlights ? state.highlights : []))
+    formData.set('faq', JSON.stringify(state.showFaq ? state.faq : []))
     formData.set('published', 'false')
     formAction(formData)
   }

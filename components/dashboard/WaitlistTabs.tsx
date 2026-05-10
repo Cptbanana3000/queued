@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import type { Subscriber } from '@/lib/types'
+import { deleteWaitlist } from '@/app/(app)/waitlists/actions'
 
 interface WaitlistTabsProps {
   waitlistId: string
@@ -146,6 +147,7 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
 /* ── Settings panel ─────────────────────────────────── */
 function SettingsPanel({ waitlistId, published }: { waitlistId: string; published: boolean }) {
   const [copyText, setCopyText] = useState('Copy link')
+  const [isPending, startTransition] = useTransition()
 
   const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/w/${waitlistId}`
 
@@ -153,6 +155,11 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
     navigator.clipboard.writeText(shareUrl)
     setCopyText('Copied!')
     setTimeout(() => setCopyText('Copy link'), 2000)
+  }
+
+  const handleDelete = () => {
+    if (!confirm('Are you sure you want to delete this waitlist? This will permanently remove all subscriber data and cannot be undone.')) return
+    startTransition(() => { deleteWaitlist(waitlistId) })
   }
 
   return (
@@ -214,14 +221,20 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px' }}>
           Deleting a waitlist is permanent and removes all subscriber data.
         </p>
-        <button style={{
-          padding: '7px 14px', borderRadius: '7px', fontSize: '12px', fontWeight: 500,
-          border: '1px solid var(--color-danger)', backgroundColor: 'transparent',
-          color: 'var(--color-danger)', cursor: 'pointer',
-        }}>
-          Delete waitlist
+        <button
+          onClick={handleDelete}
+          disabled={isPending}
+          style={{
+            padding: '7px 14px', borderRadius: '7px', fontSize: '12px', fontWeight: 500,
+            border: '1px solid var(--color-danger)', backgroundColor: 'transparent',
+            color: 'var(--color-danger)', cursor: isPending ? 'not-allowed' : 'pointer',
+            opacity: isPending ? 0.6 : 1,
+          }}
+        >
+          {isPending ? 'Deleting…' : 'Delete waitlist'}
         </button>
       </div>
     </div>
   )
 }
+

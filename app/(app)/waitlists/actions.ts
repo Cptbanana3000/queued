@@ -5,6 +5,23 @@ import { createClient } from '@/lib/supabase/server'
 import type { ActionState } from '@/lib/types'
 import { PLAN_LIMITS } from '@/lib/types'
 
+export async function deleteWaitlist(id: string): Promise<ActionState> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, message: 'Not authenticated.' }
+
+  const { error } = await supabase
+    .from('waitlists')
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { success: false, message: error.message }
+
+  redirect('/dashboard')
+}
+
+
 function slugify(str: string): string {
   return str
     .toLowerCase()

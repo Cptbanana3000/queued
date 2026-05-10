@@ -88,7 +88,9 @@ export interface BuilderState {
   template: Template
   showCount: boolean
   comingSoon: boolean
+  showHighlights: boolean
   highlights: Highlight[]
+  showFaq: boolean
   faq: FaqItem[]
   slug: string
 }
@@ -100,7 +102,9 @@ export const DEFAULT_BUILDER_STATE: BuilderState = {
   template: 'oat',
   showCount: true,
   comingSoon: false,
+  showHighlights: false,
   highlights: [],
+  showFaq: false,
   faq: [],
   slug: '',
 }

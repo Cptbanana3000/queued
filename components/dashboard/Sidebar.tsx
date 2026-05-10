@@ -66,7 +66,7 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
     }}>
       {/* Logo */}
       <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--color-border)' }}>
-        <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
           <span style={{
             width: '26px', height: '26px', background: 'var(--color-text)', borderRadius: '6px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',

@@ -18,6 +18,9 @@ export default async function EditWaitlistPage({ params }: { params: Promise<{ i
 
   if (error || !waitlist) notFound()
 
+  const highlights = (waitlist.highlights ?? []) as BuilderState['highlights']
+  const faq = (waitlist.faq ?? []) as BuilderState['faq']
+
   const initial: BuilderState = {
     name: waitlist.name,
     tagline: waitlist.tagline ?? '',
@@ -25,8 +28,10 @@ export default async function EditWaitlistPage({ params }: { params: Promise<{ i
     template: waitlist.template as Template,
     showCount: waitlist.show_count,
     comingSoon: waitlist.coming_soon,
-    highlights: waitlist.highlights as BuilderState['highlights'],
-    faq: waitlist.faq as BuilderState['faq'],
+    showHighlights: highlights.length > 0,
+    highlights,
+    showFaq: faq.length > 0,
+    faq,
     slug: waitlist.slug,
   }
 

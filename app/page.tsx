@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import type { Metadata } from 'next'
+import { createClient } from '@/lib/supabase/server'
 import LandingNav from '@/components/landing/LandingNav'
 import LandingHero from '@/components/landing/LandingHero'
 import LandingBleed from '@/components/landing/LandingBleed'
@@ -14,10 +14,13 @@ export const metadata: Metadata = {
     'Launch a beautiful waitlist page in 60 seconds. No code, no design skills. Pick a template, fill in your details, share your link.',
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <div style={{ fontFamily: 'var(--font-sans)', color: '#0a0a0a', backgroundColor: '#fff' }}>
-      <LandingNav />
+      <LandingNav isLoggedIn={!!user} />
       <LandingHero />
       <LandingBleed />
       <LandingTemplates />

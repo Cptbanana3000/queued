@@ -3,7 +3,11 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 
-export default function LandingNav() {
+interface LandingNavProps {
+  isLoggedIn?: boolean
+}
+
+export default function LandingNav({ isLoggedIn }: LandingNavProps) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -41,21 +45,37 @@ export default function LandingNav() {
 
       {/* Links */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-        <a href="#templates" style={{ fontSize: '13px', color: '#666', textDecoration: 'none', cursor: 'pointer' }}>Templates</a>
-        <a href="#pricing" style={{ fontSize: '13px', color: '#666', textDecoration: 'none', cursor: 'pointer' }}>Pricing</a>
-        <Link href="/login" style={{ fontSize: '13px', color: '#666', textDecoration: 'none' }}>Sign in</Link>
-        <Link
-          href="/signup"
-          style={{
-            padding: '7px 16px', background: '#0a0a0a', color: '#fff',
-            borderRadius: '6px', fontSize: '13px', textDecoration: 'none',
-            transition: 'background 0.15s',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = '#2e2e2c')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0a')}
-        >
-          Get started
-        </Link>
+        <a href="#templates" style={{ fontSize: '13px', color: '#666', textDecoration: 'none' }}>Templates</a>
+        <a href="#pricing" style={{ fontSize: '13px', color: '#666', textDecoration: 'none' }}>Pricing</a>
+
+        {isLoggedIn ? (
+          <Link
+            href="/dashboard"
+            style={{
+              padding: '7px 16px', background: '#0a0a0a', color: '#fff',
+              borderRadius: '6px', fontSize: '13px', textDecoration: 'none', fontWeight: 500,
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = '#2e2e2c')}
+            onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0a')}
+          >
+            Dashboard →
+          </Link>
+        ) : (
+          <>
+            <Link href="/login" style={{ fontSize: '13px', color: '#666', textDecoration: 'none' }}>Sign in</Link>
+            <Link
+              href="/signup"
+              style={{
+                padding: '7px 16px', background: '#0a0a0a', color: '#fff',
+                borderRadius: '6px', fontSize: '13px', textDecoration: 'none',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#2e2e2c')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0a')}
+            >
+              Get started
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   )
