@@ -1,0 +1,167 @@
+
+<style>
+  .t2 { font-family: var(--font-sans); }
+  .t2-hero { background: #F4F4F2; padding: 60px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .t2-pill { display: inline-block; background: #E6F1FB; color: #0C447C; font-size: 11px; padding: 3px 10px; border-radius: 20px; margin-bottom: 16px; }
+  .t2-h1 { font-size: 34px; font-weight: 500; color: #1a1a1a; margin: 0 0 12px; letter-spacing: -0.5px; line-height: 1.2; }
+  .t2-tag { font-size: 15px; color: #5F5E5A; margin: 0 0 24px; line-height: 1.6; max-width: 320px; }
+  .t2-trust { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888780; }
+  .t2-avatars { display: flex; }
+  .t2-av { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #F4F4F2; margin-right: -6px; font-size: 9px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+
+  .t2-card { background: #fff; border: 0.5px solid #D3D1C7; border-radius: 14px; padding: 28px; }
+  .t2-card-title { font-size: 15px; font-weight: 500; color: #1a1a1a; margin: 0 0 16px; }
+  .t2-input { width: 100%; box-sizing: border-box; padding: 11px 14px; border: 1px solid #D3D1C7; border-radius: 8px; background: #F4F4F2; font-size: 14px; color: #1a1a1a; outline: none; margin-bottom: 10px; }
+  .t2-btn { width: 100%; padding: 11px; background: #185FA5; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-weight: 500; }
+  .t2-card-count { font-size: 12px; color: #888780; text-align: center; margin-top: 12px; }
+  .t2-divider { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
+  .t2-divider-line { flex: 1; height: 0.5px; background: #D3D1C7; }
+  .t2-divider-text { font-size: 11px; color: #888780; }
+
+  .t2-highlights { background: #fff; padding: 60px 40px; }
+  .t2-sec-label { font-size: 11px; font-weight: 500; color: #185FA5; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 6px; }
+  .t2-sec-title { font-size: 22px; font-weight: 500; color: #1a1a1a; margin: 0 0 32px; }
+  .t2-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .t2-feat-card { background: #fff; border: 0.5px solid #D3D1C7; border-radius: 12px; padding: 20px; }
+  .t2-feat-icon { width: 36px; height: 36px; background: #E6F1FB; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .t2-feat-title { font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0 0 6px; }
+  .t2-feat-desc { font-size: 13px; color: #5F5E5A; margin: 0; line-height: 1.6; }
+
+  .t2-faq { background: #F4F4F2; padding: 60px 40px; }
+  .t2-faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .t2-faq-item { background: #fff; border: 0.5px solid #D3D1C7; border-radius: 10px; overflow: hidden; }
+  .t2-faq-q { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; cursor: pointer; }
+  .t2-faq-qtext { font-size: 14px; font-weight: 500; color: #1a1a1a; margin: 0; }
+  .t2-faq-arrow { font-size: 16px; color: #185FA5; transition: transform 0.2s; flex-shrink: 0; }
+  .t2-faq-a { font-size: 13px; color: #5F5E5A; line-height: 1.7; padding: 0 20px 16px; display: none; border-top: 0.5px solid #D3D1C7; padding-top: 12px; }
+
+  .t2-footer { background: #fff; border-top: 0.5px solid #D3D1C7; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .t2-footer-badge { font-size: 12px; color: #888780; }
+  .t2-footer-badge span { color: #185FA5; font-weight: 500; }
+  .t2-footer-link { font-size: 12px; color: #888780; }
+
+  .t2-popup { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(26,26,26,0.4); align-items: center; justify-content: center; z-index: 10; }
+  .t2-popup-box { background: #fff; border-radius: 16px; padding: 40px 32px; text-align: center; max-width: 300px; border: 0.5px solid #D3D1C7; }
+  .t2-popup-icon { width: 48px; height: 48px; background: #E6F1FB; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .t2-popup-title { font-size: 18px; font-weight: 500; color: #1a1a1a; margin: 0 0 8px; }
+  .t2-popup-sub { font-size: 14px; color: #5F5E5A; margin: 0 0 20px; }
+  .t2-popup-close { padding: 10px 24px; background: #185FA5; color: #fff; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+  .t2-wrap { position: relative; }
+</style>
+
+<div class="t2 t2-wrap">
+
+  <div class="t2-hero">
+    <div>
+      <div class="t2-pill">Coming soon</div>
+      <h1 class="t2-h1">Your product name</h1>
+      <p class="t2-tag">A clear and direct tagline that tells visitors exactly what problem you solve and who it's for.</p>
+      <div class="t2-trust">
+        <div class="t2-avatars">
+          <div class="t2-av" style="background:#B5D4F4; color:#0C447C;">A</div>
+          <div class="t2-av" style="background:#D3D1C7; color:#444441;">B</div>
+          <div class="t2-av" style="background:#9FE1CB; color:#085041;">C</div>
+        </div>
+        <span>240 people already on the list</span>
+      </div>
+    </div>
+    <div>
+      <div class="t2-card">
+        <p class="t2-card-title">Get early access</p>
+        <input class="t2-input" type="email" placeholder="Work email address" />
+        <button class="t2-btn" onclick="showT2Popup()">Join the waitlist</button>
+        <p class="t2-card-count"><i class="ti ti-lock" style="font-size:12px; vertical-align:-1px; margin-right:3px;" aria-hidden="true"></i>No spam, ever. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-highlights">
+    <p class="t2-sec-label">Features</p>
+    <p class="t2-sec-title">Built for founders who move fast</p>
+    <div class="t2-grid">
+      <div class="t2-feat-card">
+        <div class="t2-feat-icon"><i class="ti ti-rocket" style="font-size:18px; color:#185FA5;" aria-hidden="true"></i></div>
+        <p class="t2-feat-title">Live in 60 seconds</p>
+        <p class="t2-feat-desc">No design skills needed. Your waitlist page is live before your coffee gets cold.</p>
+      </div>
+      <div class="t2-feat-card">
+        <div class="t2-feat-icon"><i class="ti ti-mail" style="font-size:18px; color:#185FA5;" aria-hidden="true"></i></div>
+        <p class="t2-feat-title">Auto email collection</p>
+        <p class="t2-feat-desc">Every signup stored securely. Export your list anytime with one click.</p>
+      </div>
+      <div class="t2-feat-card">
+        <div class="t2-feat-icon"><i class="ti ti-chart-bar" style="font-size:18px; color:#185FA5;" aria-hidden="true"></i></div>
+        <p class="t2-feat-title">Real time dashboard</p>
+        <p class="t2-feat-desc">Watch your signups grow. Know exactly how much traction you're getting.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-faq">
+    <p class="t2-sec-label">FAQ</p>
+    <p class="t2-sec-title">Common questions</p>
+    <div class="t2-faq-list">
+      <div class="t2-faq-item">
+        <div class="t2-faq-q" onclick="toggleT2(0)">
+          <p class="t2-faq-qtext">When does it launch?</p>
+          <i class="ti ti-chevron-down t2-faq-arrow" id="t2arrow0" aria-hidden="true"></i>
+        </div>
+        <p class="t2-faq-a" id="t2ans0">We're targeting a Q3 launch. Join the waitlist and you'll be first in line when we go live.</p>
+      </div>
+      <div class="t2-faq-item">
+        <div class="t2-faq-q" onclick="toggleT2(1)">
+          <p class="t2-faq-qtext">How much will it cost?</p>
+          <i class="ti ti-chevron-down t2-faq-arrow" id="t2arrow1" aria-hidden="true"></i>
+        </div>
+        <p class="t2-faq-a" id="t2ans1">We'll have a free tier. Waitlist members get an exclusive early adopter discount at launch.</p>
+      </div>
+      <div class="t2-faq-item">
+        <div class="t2-faq-q" onclick="toggleT2(2)">
+          <p class="t2-faq-qtext">Who is this built for?</p>
+          <i class="ti ti-chevron-down t2-faq-arrow" id="t2arrow2" aria-hidden="true"></i>
+        </div>
+        <p class="t2-faq-a" id="t2ans2">Indie hackers, solo founders, and small teams who want to validate ideas fast without touching code.</p>
+      </div>
+      <div class="t2-faq-item">
+        <div class="t2-faq-q" onclick="toggleT2(3)">
+          <p class="t2-faq-qtext">Is my data safe?</p>
+          <i class="ti ti-chevron-down t2-faq-arrow" id="t2arrow3" aria-hidden="true"></i>
+        </div>
+        <p class="t2-faq-a" id="t2ans3">Yes. We never sell or share your data. Everything is stored securely and only you can access it.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="t2-footer">
+    <p class="t2-footer-badge">Built with <span>Queued</span></p>
+    <p class="t2-footer-link">yourproduct.com</p>
+  </div>
+
+  <div class="t2-popup" id="t2popup">
+    <div style="min-height:300px; display:flex; align-items:center; justify-content:center; width:100%;">
+      <div class="t2-popup-box">
+        <div class="t2-popup-icon"><i class="ti ti-check" style="font-size:22px; color:#0C447C;" aria-hidden="true"></i></div>
+        <p class="t2-popup-title">You're on the list!</p>
+        <p class="t2-popup-sub">We'll be in touch as soon as we launch. Thanks for signing up.</p>
+        <button class="t2-popup-close" onclick="closeT2Popup()">Done</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleT2(i) {
+  var ans = document.getElementById('t2ans' + i);
+  var arrow = document.getElementById('t2arrow' + i);
+  var open = ans.style.display === 'block';
+  ans.style.display = open ? 'none' : 'block';
+  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+}
+function showT2Popup() {
+  document.getElementById('t2popup').style.display = 'flex';
+}
+function closeT2Popup() {
+  document.getElementById('t2popup').style.display = 'none';
+}
+</script>

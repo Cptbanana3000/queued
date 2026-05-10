@@ -1,0 +1,151 @@
+
+<style>
+  .t4 { font-family: var(--font-mono), monospace; }
+  .t4-hero { background: #fff; padding: 70px 40px 60px; text-align: center; border-bottom: 2px solid #000; }
+  .t4-overline { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #000; margin: 0 0 20px; border: 1px solid #000; display: inline-block; padding: 4px 12px; }
+  .t4-h1 { font-size: 44px; font-weight: 500; color: #000; margin: 0 0 14px; letter-spacing: -1px; line-height: 1.05; }
+  .t4-tag { font-size: 15px; color: #444; margin: 0 auto 36px; max-width: 400px; line-height: 1.6; }
+  .t4-form { display: flex; gap: 0; max-width: 440px; margin: 0 auto 14px; border: 2px solid #000; }
+  .t4-input { flex: 1; padding: 12px 16px; border: none; border-right: 2px solid #000; background: #fff; font-size: 14px; color: #000; outline: none; font-family: var(--font-mono), monospace; }
+  .t4-input::placeholder { color: #999; }
+  .t4-btn { padding: 12px 20px; background: #000; color: #fff; border: none; font-size: 13px; cursor: pointer; white-space: nowrap; font-family: var(--font-mono), monospace; letter-spacing: 1px; text-transform: uppercase; }
+  .t4-count { font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+
+  .t4-highlights { background: #F5F5F5; padding: 60px 40px; border-bottom: 2px solid #000; }
+  .t4-sec-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #888; margin: 0 0 6px; }
+  .t4-sec-title { font-size: 22px; font-weight: 500; color: #000; margin: 0 0 36px; }
+  .t4-feat-row { display: grid; grid-template-columns: 48px 1fr; gap: 20px; align-items: start; padding: 24px 0; border-top: 1px solid #000; }
+  .t4-feat-row:last-child { border-bottom: 1px solid #000; }
+  .t4-feat-icon-box { width: 36px; height: 36px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; background: #fff; }
+  .t4-feat-title { font-size: 14px; font-weight: 500; color: #000; margin: 0 0 6px; letter-spacing: 0.5px; text-transform: uppercase; font-size: 12px; }
+  .t4-feat-desc { font-size: 13px; color: #444; margin: 0; line-height: 1.7; }
+
+  .t4-faq { background: #fff; padding: 60px 40px; border-bottom: 2px solid #000; }
+  .t4-faq-item { border-top: 1px solid #000; }
+  .t4-faq-item:last-child { border-bottom: 1px solid #000; }
+  .t4-faq-q { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; cursor: pointer; }
+  .t4-faq-qtext { font-size: 14px; font-weight: 500; color: #000; margin: 0; letter-spacing: 0.3px; }
+  .t4-faq-arrow { font-size: 16px; color: #000; transition: transform 0.2s; flex-shrink: 0; }
+  .t4-faq-a { font-size: 13px; color: #444; line-height: 1.7; padding: 0 0 18px; display: none; max-width: 560px; }
+
+  .t4-footer { background: #000; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .t4-badge { font-size: 11px; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+  .t4-badge span { color: #fff; }
+  .t4-footer-right { font-size: 11px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+
+  .t4-popup { display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 10; }
+  .t4-popup-box { background: #fff; border: 2px solid #000; padding: 40px 32px; text-align: center; max-width: 300px; }
+  .t4-popup-icon { width: 48px; height: 48px; background: #000; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .t4-popup-title { font-size: 18px; font-weight: 500; color: #000; margin: 0 0 8px; letter-spacing: -0.3px; }
+  .t4-popup-sub { font-size: 13px; color: #444; margin: 0 0 20px; line-height: 1.6; }
+  .t4-popup-close { padding: 10px 24px; background: #000; color: #fff; border: none; font-size: 12px; cursor: pointer; letter-spacing: 2px; text-transform: uppercase; font-family: var(--font-mono), monospace; }
+  .t4-wrap { position: relative; }
+</style>
+
+<div class="t4 t4-wrap">
+
+  <div class="t4-hero">
+    <div style="margin-bottom: 20px;">
+      <span class="t4-overline">Waitlist open</span>
+    </div>
+    <h1 class="t4-h1">Your product<br>name here</h1>
+    <p class="t4-tag">A direct, no-nonsense tagline that tells people exactly what this is and why they should care.</p>
+    <div class="t4-form">
+      <input class="t4-input" type="email" placeholder="your@email.com" />
+      <button class="t4-btn" onclick="showT4Popup()">Join</button>
+    </div>
+    <p class="t4-count">— 240 people already waiting —</p>
+  </div>
+
+  <div class="t4-highlights">
+    <p class="t4-sec-label">What you get</p>
+    <p class="t4-sec-title">Built different</p>
+    <div class="t4-feat-row">
+      <div><div class="t4-feat-icon-box"><i class="ti ti-rocket" style="font-size:16px; color:#000;" aria-hidden="true"></i></div></div>
+      <div>
+        <p class="t4-feat-title">Live in 60 seconds</p>
+        <p class="t4-feat-desc">No design skills needed. Fill in your details, pick a template, and your waitlist is live immediately.</p>
+      </div>
+    </div>
+    <div class="t4-feat-row">
+      <div><div class="t4-feat-icon-box"><i class="ti ti-mail" style="font-size:16px; color:#000;" aria-hidden="true"></i></div></div>
+      <div>
+        <p class="t4-feat-title">Auto email collection</p>
+        <p class="t4-feat-desc">Every signup stored securely. Export your full list anytime with a single click. No integrations needed.</p>
+      </div>
+    </div>
+    <div class="t4-feat-row">
+      <div><div class="t4-feat-icon-box"><i class="ti ti-chart-bar" style="font-size:16px; color:#000;" aria-hidden="true"></i></div></div>
+      <div>
+        <p class="t4-feat-title">Real time dashboard</p>
+        <p class="t4-feat-desc">Watch signups roll in. Know exactly how much traction your idea is generating at any moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="t4-faq">
+    <p class="t4-sec-label">Questions</p>
+    <p class="t4-sec-title">Straight answers</p>
+    <div class="t4-faq-item">
+      <div class="t4-faq-q" onclick="toggleT4(0)">
+        <p class="t4-faq-qtext">When does it launch?</p>
+        <i class="ti ti-plus t4-faq-arrow" id="t4arrow0" aria-hidden="true"></i>
+      </div>
+      <p class="t4-faq-a" id="t4ans0">Q3 this year. Join the waitlist and you'll be first in line when we go live.</p>
+    </div>
+    <div class="t4-faq-item">
+      <div class="t4-faq-q" onclick="toggleT4(1)">
+        <p class="t4-faq-qtext">How much will it cost?</p>
+        <i class="ti ti-plus t4-faq-arrow" id="t4arrow1" aria-hidden="true"></i>
+      </div>
+      <p class="t4-faq-a" id="t4ans1">Free tier available. Waitlist members get an exclusive early adopter discount at launch.</p>
+    </div>
+    <div class="t4-faq-item">
+      <div class="t4-faq-q" onclick="toggleT4(2)">
+        <p class="t4-faq-qtext">Who is this built for?</p>
+        <i class="ti ti-plus t4-faq-arrow" id="t4arrow2" aria-hidden="true"></i>
+      </div>
+      <p class="t4-faq-a" id="t4ans2">Indie hackers, solo founders, small teams. Anyone building something worth launching.</p>
+    </div>
+    <div class="t4-faq-item">
+      <div class="t4-faq-q" onclick="toggleT4(3)">
+        <p class="t4-faq-qtext">Is my data safe?</p>
+        <i class="ti ti-plus t4-faq-arrow" id="t4arrow3" aria-hidden="true"></i>
+      </div>
+      <p class="t4-faq-a" id="t4ans3">Yes. We never sell or share your data. Your signups are yours and only yours.</p>
+    </div>
+  </div>
+
+  <div class="t4-footer">
+    <p class="t4-badge">Built with <span>Queued</span></p>
+    <p class="t4-footer-right">yourproduct.com</p>
+  </div>
+
+  <div class="t4-popup" id="t4popup">
+    <div style="min-height:300px; display:flex; align-items:center; justify-content:center; width:100%;">
+      <div class="t4-popup-box">
+        <div class="t4-popup-icon"><i class="ti ti-check" style="font-size:22px; color:#fff;" aria-hidden="true"></i></div>
+        <p class="t4-popup-title">You're on the list.</p>
+        <p class="t4-popup-sub">We'll be in touch when we launch. Thanks for being early.</p>
+        <button class="t4-popup-close" onclick="closeT4Popup()">Done</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleT4(i) {
+  var ans = document.getElementById('t4ans' + i);
+  var arrow = document.getElementById('t4arrow' + i);
+  var open = ans.style.display === 'block';
+  ans.style.display = open ? 'none' : 'block';
+  arrow.style.transform = open ? 'rotate(45deg)' : 'rotate(0deg)';
+}
+function showT4Popup() {
+  document.getElementById('t4popup').style.display = 'flex';
+}
+function closeT4Popup() {
+  document.getElementById('t4popup').style.display = 'none';
+}
+</script>

@@ -1,0 +1,321 @@
+
+<style>
+  .db { font-family: var(--font-sans); color: #0a0a0a; display: flex; height: 100vh; min-height: 640px; background: #F7F7F5; }
+
+  .db-sidebar { width: 220px; background: #fff; border-right: 1px solid #e8e8e8; display: flex; flex-direction: column; flex-shrink: 0; }
+  .db-sidebar-logo { padding: 18px 16px; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; gap: 8px; }
+  .db-sidebar-logomark { width: 26px; height: 26px; background: #0a0a0a; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .db-sidebar-wordmark { font-size: 14px; font-weight: 500; color: #0a0a0a; }
+  .db-sidebar-nav { padding: 12px 8px; flex: 1; }
+  .db-nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+  .db-nav-item:hover { background: #f4f4f4; }
+  .db-nav-item.active { background: #f4f4f4; }
+  .db-nav-item-icon { font-size: 16px; color: #666; }
+  .db-nav-item.active .db-nav-item-icon { color: #0a0a0a; }
+  .db-nav-item-label { font-size: 13px; color: #666; }
+  .db-nav-item.active .db-nav-item-label { color: #0a0a0a; font-weight: 500; }
+  .db-sidebar-bottom { padding: 12px 8px; border-top: 1px solid #e8e8e8; }
+  .db-user { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; cursor: pointer; }
+  .db-user:hover { background: #f4f4f4; }
+  .db-avatar { width: 28px; height: 28px; border-radius: 50%; background: #FAEEDA; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: #BA7517; flex-shrink: 0; }
+  .db-user-info { flex: 1; min-width: 0; }
+  .db-user-name { font-size: 12px; font-weight: 500; color: #0a0a0a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .db-user-plan { font-size: 11px; color: #999; }
+
+  .db-main { flex: 1; overflow-y: auto; padding: 28px 32px; }
+  .db-main-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .db-greeting { font-size: 20px; font-weight: 500; color: #0a0a0a; margin: 0 0 3px; letter-spacing: -0.3px; }
+  .db-greeting-sub { font-size: 13px; color: #999; margin: 0; }
+  .db-new-btn { display: flex; align-items: center; gap: 6px; padding: 9px 16px; background: #0a0a0a; color: #fff; border: none; border-radius: 7px; font-size: 13px; cursor: pointer; }
+
+  .db-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 28px; }
+  .db-stat { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 16px; }
+  .db-stat-label { font-size: 11px; color: #999; margin: 0 0 6px; }
+  .db-stat-value { font-size: 24px; font-weight: 500; color: #0a0a0a; margin: 0 0 2px; letter-spacing: -0.5px; }
+  .db-stat-change { font-size: 11px; color: #22c55e; margin: 0; display: flex; align-items: center; gap: 3px; }
+
+  .db-section-title { font-size: 13px; font-weight: 500; color: #0a0a0a; margin: 0 0 14px; }
+
+  .db-waitlist-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: border-color 0.15s; }
+  .db-waitlist-card:hover { border-color: #0a0a0a; }
+  .db-waitlist-swatch { width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .db-waitlist-info { flex: 1; min-width: 0; }
+  .db-waitlist-name { font-size: 14px; font-weight: 500; color: #0a0a0a; margin: 0 0 3px; }
+  .db-waitlist-meta { font-size: 12px; color: #999; margin: 0; }
+  .db-waitlist-stats { display: flex; gap: 20px; flex-shrink: 0; }
+  .db-waitlist-stat { text-align: right; }
+  .db-waitlist-stat-val { font-size: 16px; font-weight: 500; color: #0a0a0a; margin: 0 0 1px; }
+  .db-waitlist-stat-label { font-size: 11px; color: #999; margin: 0; }
+  .db-waitlist-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .db-action-btn { width: 30px; height: 30px; border-radius: 6px; background: #f4f4f4; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #666; }
+  .db-action-btn:hover { background: #e8e8e8; color: #0a0a0a; }
+  .db-status-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+  .db-status-live { background: #dcfce7; color: #166534; }
+  .db-status-draft { background: #f4f4f4; color: #666; }
+
+  .db-detail { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .db-detail.open { display: flex; }
+  .db-detail-header { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 32px; display: flex; align-items: center; gap: 0; }
+  .db-back { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #666; cursor: pointer; padding: 16px 0; margin-right: 20px; border: none; background: none; }
+  .db-detail-name { font-size: 14px; font-weight: 500; color: #0a0a0a; margin-right: 12px; }
+  .db-tabs { display: flex; gap: 0; margin-left: auto; }
+  .db-tab { padding: 16px 16px; font-size: 13px; color: #666; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .db-tab.active { color: #0a0a0a; border-bottom-color: #0a0a0a; font-weight: 500; }
+  .db-detail-body { flex: 1; overflow-y: auto; padding: 28px 32px; background: #F7F7F5; }
+
+  .db-overview-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
+  .db-chart-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 18px; margin-bottom: 24px; }
+  .db-chart-title { font-size: 13px; font-weight: 500; color: #0a0a0a; margin: 0 0 16px; }
+  .db-chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 80px; }
+  .db-bar { flex: 1; border-radius: 4px 4px 0 0; background: #e8e8e8; transition: background 0.15s; }
+  .db-bar:hover { background: #0a0a0a; }
+  .db-chart-labels { display: flex; gap: 6px; margin-top: 6px; }
+  .db-chart-label { flex: 1; text-align: center; font-size: 9px; color: #999; }
+
+  .db-subs-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; }
+  .db-subs-header { padding: 14px 18px; border-bottom: 1px solid #e8e8e8; display: flex; align-items: center; justify-content: space-between; }
+  .db-subs-search { padding: 7px 12px; border: 1px solid #e8e8e8; border-radius: 6px; font-size: 12px; outline: none; width: 180px; }
+  .db-export-btn { display: flex; align-items: center; gap: 5px; padding: 7px 14px; background: #0a0a0a; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+  .db-subs-table { width: 100%; border-collapse: collapse; }
+  .db-subs-table th { padding: 10px 18px; text-align: left; font-size: 11px; font-weight: 500; color: #999; border-bottom: 1px solid #e8e8e8; background: #fafafa; }
+  .db-subs-table td { padding: 11px 18px; font-size: 13px; color: #0a0a0a; border-bottom: 1px solid #f4f4f4; }
+  .db-subs-table tr:last-child td { border-bottom: none; }
+  .db-subs-table tr:hover td { background: #fafafa; }
+
+  .db-settings-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+  .db-settings-title { font-size: 13px; font-weight: 500; color: #0a0a0a; margin: 0 0 14px; }
+  .db-settings-field { margin-bottom: 14px; }
+  .db-settings-label { font-size: 11px; font-weight: 500; color: #666; margin-bottom: 5px; display: block; }
+  .db-settings-input { width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid #e8e8e8; border-radius: 6px; font-size: 13px; outline: none; }
+  .db-settings-save { padding: 8px 18px; background: #0a0a0a; color: #fff; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .db-danger-card { background: #fff; border: 1px solid #fca5a5; border-radius: 10px; padding: 20px; }
+  .db-danger-title { font-size: 13px; font-weight: 500; color: #dc2626; margin: 0 0 6px; }
+  .db-danger-desc { font-size: 12px; color: #666; margin: 0 0 14px; }
+  .db-danger-btn { padding: 8px 18px; background: #dc2626; color: #fff; border: none; border-radius: 6px; font-size: 13px; cursor: pointer; }
+  .db-pro-nudge { background: #FAEEDA; border: 1px solid #FAC775; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+  .db-pro-nudge-text { font-size: 13px; color: #633806; }
+  .db-pro-nudge-btn { padding: 6px 14px; background: #BA7517; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+</style>
+
+<div class="db">
+  <div class="db-sidebar">
+    <div class="db-sidebar-logo">
+      <div class="db-sidebar-logomark"><i class="ti ti-stack" style="font-size:13px;color:#fff;" aria-hidden="true"></i></div>
+      <span class="db-sidebar-wordmark">Queued</span>
+    </div>
+    <div class="db-sidebar-nav">
+      <div class="db-nav-item active" onclick="showMain()">
+        <i class="ti ti-layout-dashboard db-nav-item-icon" aria-hidden="true"></i>
+        <span class="db-nav-item-label">Dashboard</span>
+      </div>
+      <div class="db-nav-item" onclick="showMain()">
+        <i class="ti ti-list db-nav-item-icon" aria-hidden="true"></i>
+        <span class="db-nav-item-label">Waitlists</span>
+      </div>
+      <div class="db-nav-item">
+        <i class="ti ti-settings db-nav-item-icon" aria-hidden="true"></i>
+        <span class="db-nav-item-label">Settings</span>
+      </div>
+      <div class="db-nav-item">
+        <i class="ti ti-help-circle db-nav-item-icon" aria-hidden="true"></i>
+        <span class="db-nav-item-label">Help</span>
+      </div>
+    </div>
+    <div class="db-sidebar-bottom">
+      <div class="db-user">
+        <div class="db-avatar">JO</div>
+        <div class="db-user-info">
+          <p class="db-user-name">Jojo</p>
+          <p class="db-user-plan">Free plan</p>
+        </div>
+        <i class="ti ti-dots" style="font-size:14px;color:#999;" aria-hidden="true"></i>
+      </div>
+    </div>
+  </div>
+
+  <div id="db-main-view" class="db-main">
+    <div class="db-main-top">
+      <div>
+        <p class="db-greeting">Good morning, Jojo</p>
+        <p class="db-greeting-sub">Here's how your waitlists are doing today</p>
+      </div>
+      <button class="db-new-btn"><i class="ti ti-plus" style="font-size:14px;" aria-hidden="true"></i> New waitlist</button>
+    </div>
+
+    <div class="db-pro-nudge">
+      <p class="db-pro-nudge-text">You're on the free plan · 1 waitlist, 100 signups max</p>
+      <button class="db-pro-nudge-btn">Upgrade to Pro</button>
+    </div>
+
+    <div class="db-stats">
+      <div class="db-stat">
+        <p class="db-stat-label">Total signups</p>
+        <p class="db-stat-value">247</p>
+        <p class="db-stat-change"><i class="ti ti-trending-up" style="font-size:11px;" aria-hidden="true"></i> +12 today</p>
+      </div>
+      <div class="db-stat">
+        <p class="db-stat-label">This week</p>
+        <p class="db-stat-value">64</p>
+        <p class="db-stat-change"><i class="ti ti-trending-up" style="font-size:11px;" aria-hidden="true"></i> +8 vs last week</p>
+      </div>
+      <div class="db-stat">
+        <p class="db-stat-label">Waitlists</p>
+        <p class="db-stat-value">1 / 1</p>
+        <p class="db-stat-change" style="color:#999;">Free plan limit</p>
+      </div>
+    </div>
+
+    <p class="db-section-title">Your waitlists</p>
+
+    <div class="db-waitlist-card" onclick="showDetail()">
+      <div class="db-waitlist-swatch" style="background:#FAF7F2;border:1px solid #e8e8e8;">
+        <i class="ti ti-bolt" style="font-size:16px;color:#2C2C2A;" aria-hidden="true"></i>
+      </div>
+      <div class="db-waitlist-info">
+        <p class="db-waitlist-name">My product <span class="db-status-pill db-status-live">Live</span></p>
+        <p class="db-waitlist-meta">myproduct.queued.io · Oat template</p>
+      </div>
+      <div class="db-waitlist-stats">
+        <div class="db-waitlist-stat">
+          <p class="db-waitlist-stat-val">247</p>
+          <p class="db-waitlist-stat-label">Total</p>
+        </div>
+        <div class="db-waitlist-stat">
+          <p class="db-waitlist-stat-val">+12</p>
+          <p class="db-waitlist-stat-label">Today</p>
+        </div>
+      </div>
+      <div class="db-waitlist-actions">
+        <button class="db-action-btn" title="Edit"><i class="ti ti-edit" style="font-size:14px;" aria-hidden="true"></i></button>
+        <button class="db-action-btn" title="Copy link"><i class="ti ti-copy" style="font-size:14px;" aria-hidden="true"></i></button>
+        <button class="db-action-btn" title="View live"><i class="ti ti-external-link" style="font-size:14px;" aria-hidden="true"></i></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="db-detail-view" class="db-detail">
+    <div class="db-detail-header">
+      <button class="db-back" onclick="showMain()"><i class="ti ti-arrow-left" style="font-size:13px;" aria-hidden="true"></i> Back</button>
+      <span class="db-detail-name">My product</span>
+      <span class="db-status-pill db-status-live">Live</span>
+      <div class="db-tabs">
+        <div class="db-tab active" onclick="switchTab('overview',this)">Overview</div>
+        <div class="db-tab" onclick="switchTab('subscribers',this)">Subscribers</div>
+        <div class="db-tab" onclick="switchTab('settings',this)">Settings</div>
+      </div>
+    </div>
+    <div class="db-detail-body">
+
+      <div id="tab-overview">
+        <div class="db-overview-stats">
+          <div class="db-stat">
+            <p class="db-stat-label">Total signups</p>
+            <p class="db-stat-value">247</p>
+            <p class="db-stat-change"><i class="ti ti-trending-up" style="font-size:11px;" aria-hidden="true"></i> +12 today</p>
+          </div>
+          <div class="db-stat">
+            <p class="db-stat-label">This week</p>
+            <p class="db-stat-value">64</p>
+            <p class="db-stat-change"><i class="ti ti-trending-up" style="font-size:11px;" aria-hidden="true"></i> Growing</p>
+          </div>
+          <div class="db-stat">
+            <p class="db-stat-label">This month</p>
+            <p class="db-stat-value">198</p>
+            <p class="db-stat-change"><i class="ti ti-trending-up" style="font-size:11px;" aria-hidden="true"></i> Best month</p>
+          </div>
+        </div>
+        <div class="db-chart-card">
+          <p class="db-chart-title">Signups over time</p>
+          <div class="db-chart-bars">
+            <div class="db-bar" style="height:30%;"></div>
+            <div class="db-bar" style="height:45%;"></div>
+            <div class="db-bar" style="height:35%;"></div>
+            <div class="db-bar" style="height:60%;"></div>
+            <div class="db-bar" style="height:50%;"></div>
+            <div class="db-bar" style="height:75%;"></div>
+            <div class="db-bar" style="height:65%;"></div>
+            <div class="db-bar" style="height:80%;background:#0a0a0a;"></div>
+          </div>
+          <div class="db-chart-labels">
+            <span class="db-chart-label">Mon</span>
+            <span class="db-chart-label">Tue</span>
+            <span class="db-chart-label">Wed</span>
+            <span class="db-chart-label">Thu</span>
+            <span class="db-chart-label">Fri</span>
+            <span class="db-chart-label">Sat</span>
+            <span class="db-chart-label">Sun</span>
+            <span class="db-chart-label">Today</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-subscribers" style="display:none;">
+        <div class="db-subs-card">
+          <div class="db-subs-header">
+            <p style="font-size:13px;font-weight:500;color:#0a0a0a;margin:0;">247 subscribers</p>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <input class="db-subs-search" placeholder="Search emails..." />
+              <button class="db-export-btn"><i class="ti ti-download" style="font-size:13px;" aria-hidden="true"></i> Export CSV</button>
+            </div>
+          </div>
+          <table class="db-subs-table">
+            <thead><tr><th>Email</th><th>Signed up</th><th>Position</th></tr></thead>
+            <tbody>
+              <tr><td>sarah@gmail.com</td><td>Today, 9:41am</td><td>#247</td></tr>
+              <tr><td>alex.dev@outlook.com</td><td>Today, 8:12am</td><td>#246</td></tr>
+              <tr><td>mike@company.io</td><td>Yesterday, 6:30pm</td><td>#245</td></tr>
+              <tr><td>jana.k@gmail.com</td><td>Yesterday, 2:14pm</td><td>#244</td></tr>
+              <tr><td>tom@startup.com</td><td>Yesterday, 11:05am</td><td>#243</td></tr>
+              <tr><td>priya.m@hey.com</td><td>2 days ago</td><td>#242</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="tab-settings" style="display:none;">
+        <div class="db-settings-card">
+          <p class="db-settings-title">Domain</p>
+          <div class="db-settings-field">
+            <label class="db-settings-label">Subdomain</label>
+            <div style="display:flex;gap:0;margin-bottom:12px;">
+              <input class="db-settings-input" style="border-radius:6px 0 0 6px;border-right:none;" value="myproduct" />
+              <span style="padding:8px 12px;background:#f4f4f4;border:1px solid #e8e8e8;border-radius:0 6px 6px 0;font-size:13px;color:#666;white-space:nowrap;">.queued.io</span>
+            </div>
+          </div>
+          <div class="db-settings-field" style="margin-bottom:16px;">
+            <label class="db-settings-label">Custom domain <span style="background:#FAEEDA;color:#BA7517;font-size:10px;padding:1px 6px;border-radius:4px;margin-left:4px;">Pro</span></label>
+            <input class="db-settings-input" placeholder="yourproduct.com" disabled style="background:#f9f9f9;color:#999;cursor:not-allowed;" />
+          </div>
+          <button class="db-settings-save">Save changes</button>
+        </div>
+        <div class="db-danger-card">
+          <p class="db-danger-title">Danger zone</p>
+          <p class="db-danger-desc">Permanently delete this waitlist and all its subscribers. This cannot be undone.</p>
+          <button class="db-danger-btn">Delete waitlist</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showMain() {
+  document.getElementById('db-main-view').style.display = 'block';
+  document.getElementById('db-detail-view').classList.remove('open');
+  document.querySelectorAll('.db-nav-item').forEach(function(el,i){ el.classList.toggle('active', i===0); });
+}
+function showDetail() {
+  document.getElementById('db-main-view').style.display = 'none';
+  document.getElementById('db-detail-view').classList.add('open');
+}
+function switchTab(tab, el) {
+  document.querySelectorAll('.db-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('tab-overview').style.display = tab === 'overview' ? 'block' : 'none';
+  document.getElementById('tab-subscribers').style.display = tab === 'subscribers' ? 'block' : 'none';
+  document.getElementById('tab-settings').style.display = tab === 'settings' ? 'block' : 'none';
+}
+</script>

@@ -1,0 +1,519 @@
+
+<style>
+  .pb { font-family: var(--font-sans); color: #0a0a0a; height: 100vh; display: flex; flex-direction: column; min-height: 700px; }
+
+  .pb-topbar { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 0 20px; height: 52px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .pb-topbar-left { display: flex; align-items: center; gap: 16px; }
+  .pb-topbar-logo { display: flex; align-items: center; gap: 6px; }
+  .pb-topbar-logomark { width: 24px; height: 24px; background: #0a0a0a; border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+  .pb-topbar-wordmark { font-size: 14px; font-weight: 500; color: #0a0a0a; }
+  .pb-topbar-divider { width: 1px; height: 20px; background: #e8e8e8; }
+  .pb-topbar-name { font-size: 13px; color: #666; }
+  .pb-topbar-right { display: flex; align-items: center; gap: 10px; }
+  .pb-topbar-link { font-size: 12px; color: #666; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .pb-topbar-preview { padding: 6px 14px; background: #f4f4f4; border: 1px solid #e8e8e8; border-radius: 6px; font-size: 12px; color: #0a0a0a; cursor: pointer; }
+  .pb-topbar-publish { padding: 6px 16px; background: #0a0a0a; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+
+  .pb-body { display: grid; grid-template-columns: 300px 1fr; flex: 1; overflow: hidden; }
+
+  .pb-left { border-right: 1px solid #e8e8e8; overflow-y: auto; background: #fff; }
+  .pb-section { border-bottom: 1px solid #e8e8e8; }
+  .pb-section-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .pb-section-title { font-size: 12px; font-weight: 500; color: #0a0a0a; }
+  .pb-section-body { padding: 0 16px 16px; }
+
+  .pb-tmpl-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 12px 16px 16px; }
+  .pb-tmpl-opt { border: 1.5px solid #e8e8e8; border-radius: 8px; padding: 8px; cursor: pointer; text-align: center; transition: border-color 0.15s; }
+  .pb-tmpl-opt.active { border-color: #0a0a0a; }
+  .pb-tmpl-swatch { height: 36px; border-radius: 4px; margin-bottom: 6px; }
+  .pb-tmpl-opt-name { font-size: 11px; font-weight: 500; color: #0a0a0a; }
+
+  .pb-field { margin-bottom: 12px; }
+  .pb-label { font-size: 11px; font-weight: 500; color: #666; margin-bottom: 5px; display: block; }
+  .pb-input { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #e8e8e8; border-radius: 6px; font-size: 13px; color: #0a0a0a; outline: none; font-family: var(--font-sans); background: #fff; }
+  .pb-input:focus { border-color: #0a0a0a; }
+  .pb-textarea { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid #e8e8e8; border-radius: 6px; font-size: 13px; color: #0a0a0a; outline: none; font-family: var(--font-sans); resize: none; background: #fff; }
+  .pb-textarea:focus { border-color: #0a0a0a; }
+
+  .pb-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .pb-toggle-label { font-size: 12px; color: #0a0a0a; }
+  .pb-toggle { position: relative; width: 32px; height: 18px; }
+  .pb-toggle input { opacity: 0; width: 0; height: 0; }
+  .pb-toggle-slider { position: absolute; inset: 0; background: #e8e8e8; border-radius: 18px; cursor: pointer; transition: background 0.2s; }
+  .pb-toggle-slider:before { content: ''; position: absolute; width: 14px; height: 14px; left: 2px; top: 2px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+  .pb-toggle input:checked + .pb-toggle-slider { background: #0a0a0a; }
+  .pb-toggle input:checked + .pb-toggle-slider:before { transform: translateX(14px); }
+
+  .pb-feat-item { background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+  .pb-feat-item-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .pb-feat-num { font-size: 11px; font-weight: 500; color: #999; }
+  .pb-feat-remove { font-size: 11px; color: #999; cursor: pointer; background: none; border: none; padding: 0; }
+  .pb-add-btn { width: 100%; padding: 8px; border: 1px dashed #e8e8e8; border-radius: 6px; background: #fff; font-size: 12px; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 4px; }
+  .pb-add-btn:hover { border-color: #0a0a0a; color: #0a0a0a; }
+
+  .pb-faq-item { background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+
+  .pb-right { background: #F7F7F5; overflow-y: auto; display: flex; flex-direction: column; align-items: center; padding: 24px; }
+  .pb-preview-label { font-size: 11px; color: #999; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; align-self: flex-start; }
+  .pb-preview-frame { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; width: 100%; max-width: 480px; overflow: hidden; }
+  .pb-preview-url { background: #f4f4f4; border-bottom: 1px solid #e8e8e8; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+  .pb-preview-dots { display: flex; gap: 4px; }
+  .pb-preview-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .pb-preview-urlbar { flex: 1; background: #fff; border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #999; text-align: center; border: 1px solid #e8e8e8; }
+  .pb-preview-content { overflow: hidden; }
+
+  .pb-oat-hero { text-align: center; padding: 32px 24px; }
+  .pb-oat-logo { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; background: #2C2C2A; }
+  .pb-oat-pill { display: inline-block; background: #F0997B; color: #712B13; font-size: 9px; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; }
+  .pb-oat-h1 { font-size: 18px; font-weight: 500; color: #2C2C2A; margin: 0 0 6px; letter-spacing: -0.3px; }
+  .pb-oat-tag { font-size: 11px; color: #5F5E5A; margin: 0 0 14px; line-height: 1.5; }
+  .pb-oat-form { display: flex; gap: 6px; max-width: 260px; margin: 0 auto 6px; }
+  .pb-oat-input { flex: 1; padding: 7px 10px; border: 1px solid #D3D1C7; border-radius: 6px; background: #fff; font-size: 10px; outline: none; }
+  .pb-oat-btn { padding: 7px 12px; background: #2C2C2A; color: #FAF7F2; border: none; border-radius: 6px; font-size: 10px; white-space: nowrap; }
+  .pb-oat-count { font-size: 10px; color: #888780; }
+
+  .pb-slate-hero { padding: 28px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; background: #F4F4F2; }
+  .pb-slate-pill { display: inline-block; background: #E6F1FB; color: #0C447C; font-size: 9px; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; }
+  .pb-slate-h1 { font-size: 16px; font-weight: 500; color: #1a1a1a; margin: 0 0 6px; letter-spacing: -0.3px; }
+  .pb-slate-tag { font-size: 10px; color: #5F5E5A; margin: 0; line-height: 1.5; }
+  .pb-slate-card { background: #fff; border: 0.5px solid #D3D1C7; border-radius: 8px; padding: 12px; }
+  .pb-slate-card-title { font-size: 11px; font-weight: 500; color: #1a1a1a; margin: 0 0 8px; }
+  .pb-slate-input { width: 100%; box-sizing: border-box; padding: 7px 10px; border: 1px solid #D3D1C7; border-radius: 5px; background: #F4F4F2; font-size: 10px; outline: none; margin-bottom: 6px; }
+  .pb-slate-btn { width: 100%; padding: 7px; background: #185FA5; color: #fff; border: none; border-radius: 5px; font-size: 10px; }
+
+  .pb-ember-hero { text-align: center; padding: 32px 24px; background: #1C1917; }
+  .pb-ember-overline { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #EF9F27; margin: 0 0 10px; }
+  .pb-ember-h1 { font-size: 18px; font-weight: 500; color: #FAF7F2; margin: 0 0 6px; letter-spacing: -0.3px; }
+  .pb-ember-tag { font-size: 11px; color: #888780; margin: 0 0 12px; line-height: 1.5; }
+  .pb-ember-rule { width: 28px; height: 1px; background: #EF9F27; margin: 0 auto 12px; }
+  .pb-ember-form { display: flex; gap: 6px; max-width: 260px; margin: 0 auto 6px; }
+  .pb-ember-input { flex: 1; padding: 7px 10px; border: 1px solid #444441; border-radius: 6px; background: #2C2C2A; font-size: 10px; color: #FAF7F2; outline: none; }
+  .pb-ember-btn { padding: 7px 12px; background: #EF9F27; color: #1C1917; border: none; border-radius: 6px; font-size: 10px; font-weight: 500; white-space: nowrap; }
+  .pb-ember-count { font-size: 10px; color: #5F5E5A; }
+
+  .pb-void-hero { text-align: center; padding: 32px 24px; background: #fff; border-bottom: 2px solid #000; font-family: monospace; }
+  .pb-void-pill { display: inline-block; border: 1px solid #000; font-size: 8px; padding: 2px 8px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .pb-void-h1 { font-size: 18px; font-weight: 500; color: #000; margin: 0 0 6px; letter-spacing: -0.3px; }
+  .pb-void-tag { font-size: 10px; color: #444; margin: 0 0 14px; line-height: 1.5; }
+  .pb-void-form { display: flex; max-width: 260px; margin: 0 auto 8px; border: 2px solid #000; }
+  .pb-void-input { flex: 1; padding: 7px 10px; border: none; border-right: 2px solid #000; background: #fff; font-size: 10px; outline: none; font-family: monospace; }
+  .pb-void-btn { padding: 7px 10px; background: #000; color: #fff; border: none; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-family: monospace; white-space: nowrap; }
+  .pb-void-count { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+
+  .pb-highlights-preview { padding: 16px 20px; border-top: 1px solid #e8e8e8; }
+  .pb-hl-label { font-size: 9px; color: #999; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 10px; }
+  .pb-hl-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .pb-hl-icon { width: 24px; height: 24px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .pb-hl-title { font-size: 11px; font-weight: 500; margin: 0 0 2px; }
+  .pb-hl-desc { font-size: 10px; color: #666; margin: 0; line-height: 1.4; }
+
+  .pb-faq-preview { padding: 16px 20px; border-top: 1px solid #e8e8e8; }
+  .pb-faq-label { font-size: 9px; color: #999; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 10px; }
+  .pb-faq-row { padding: 8px 0; border-top: 0.5px solid #e8e8e8; display: flex; justify-content: space-between; align-items: center; }
+  .pb-faq-q { font-size: 11px; font-weight: 500; color: #0a0a0a; margin: 0; }
+
+  .pb-preview-footer { padding: 10px 20px; border-top: 1px solid #e8e8e8; text-align: center; }
+  .pb-preview-badge { font-size: 10px; color: #999; }
+</style>
+
+<div class="pb">
+
+  <div class="pb-topbar">
+    <div class="pb-topbar-left">
+      <div class="pb-topbar-logo">
+        <div class="pb-topbar-logomark"><i class="ti ti-stack" style="font-size:13px;color:#fff;" aria-hidden="true"></i></div>
+        <span class="pb-topbar-wordmark">Queued</span>
+      </div>
+      <div class="pb-topbar-divider"></div>
+      <span class="pb-topbar-name" id="tb-name">My product</span>
+    </div>
+    <div class="pb-topbar-right">
+      <span class="pb-topbar-link"><i class="ti ti-external-link" style="font-size:12px;" aria-hidden="true"></i> myproduct.queued.io</span>
+      <button class="pb-topbar-preview">Preview</button>
+      <button class="pb-topbar-publish">Publish</button>
+    </div>
+  </div>
+
+  <div class="pb-body">
+
+    <div class="pb-left">
+
+      <div class="pb-section">
+        <div class="pb-section-header">
+          <span class="pb-section-title">Template</span>
+        </div>
+        <div class="pb-tmpl-grid">
+          <div class="pb-tmpl-opt active" onclick="setTemplate('oat',this)">
+            <div class="pb-tmpl-swatch" style="background:#FAF7F2;border:1px solid #e8e8e8;"></div>
+            <p class="pb-tmpl-opt-name">Oat</p>
+          </div>
+          <div class="pb-tmpl-opt" onclick="setTemplate('slate',this)">
+            <div class="pb-tmpl-swatch" style="background:#F4F4F2;border:1px solid #e8e8e8;"></div>
+            <p class="pb-tmpl-opt-name">Slate</p>
+          </div>
+          <div class="pb-tmpl-opt" onclick="setTemplate('ember',this)">
+            <div class="pb-tmpl-swatch" style="background:#1C1917;"></div>
+            <p class="pb-tmpl-opt-name">Ember</p>
+          </div>
+          <div class="pb-tmpl-opt" onclick="setTemplate('void',this)">
+            <div class="pb-tmpl-swatch" style="background:#fff;border:2px solid #000;"></div>
+            <p class="pb-tmpl-opt-name">Void</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pb-section">
+        <div class="pb-section-header">
+          <span class="pb-section-title">General</span>
+        </div>
+        <div class="pb-section-body">
+          <div class="pb-toggle-row">
+            <span class="pb-toggle-label">Show "Coming soon" pill</span>
+            <label class="pb-toggle"><input type="checkbox" checked onchange="updatePill(this)" /><span class="pb-toggle-slider"></span></label>
+          </div>
+          <div class="pb-field">
+            <label class="pb-label">Product name</label>
+            <input class="pb-input" value="My product" oninput="updateField('name',this.value)" />
+          </div>
+          <div class="pb-field">
+            <label class="pb-label">Tagline</label>
+            <textarea class="pb-textarea" rows="2" oninput="updateField('tagline',this.value)">The fastest way to launch your waitlist and start collecting signups today.</textarea>
+          </div>
+          <div class="pb-field">
+            <label class="pb-label">Button text</label>
+            <input class="pb-input" value="Join waitlist" oninput="updateField('btn',this.value)" />
+          </div>
+        </div>
+      </div>
+
+      <div class="pb-section">
+        <div class="pb-section-header">
+          <span class="pb-section-title">Highlights</span>
+          <label class="pb-toggle"><input type="checkbox" checked onchange="toggleSection('highlights',this)" /><span class="pb-toggle-slider"></span></label>
+        </div>
+        <div class="pb-section-body" id="highlights-body">
+          <div class="pb-feat-item">
+            <div class="pb-feat-item-top"><span class="pb-feat-num">Feature 1</span><button class="pb-feat-remove" onclick="removeFeat(0)">Remove</button></div>
+            <div class="pb-field"><label class="pb-label">Title</label><input class="pb-input" value="Launch in 60 seconds" oninput="updateFeat(0,'title',this.value)" /></div>
+            <div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Description</label><input class="pb-input" value="No design skills needed. Live instantly." oninput="updateFeat(0,'desc',this.value)" /></div>
+          </div>
+          <div class="pb-feat-item">
+            <div class="pb-feat-item-top"><span class="pb-feat-num">Feature 2</span><button class="pb-feat-remove" onclick="removeFeat(1)">Remove</button></div>
+            <div class="pb-field"><label class="pb-label">Title</label><input class="pb-input" value="Auto email collection" oninput="updateFeat(1,'title',this.value)" /></div>
+            <div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Description</label><input class="pb-input" value="Every signup stored and ready to export." oninput="updateFeat(1,'desc',this.value)" /></div>
+          </div>
+          <button class="pb-add-btn" onclick="addFeat()"><i class="ti ti-plus" style="font-size:12px;" aria-hidden="true"></i> Add feature</button>
+        </div>
+      </div>
+
+      <div class="pb-section">
+        <div class="pb-section-header">
+          <span class="pb-section-title">FAQ</span>
+          <label class="pb-toggle"><input type="checkbox" checked onchange="toggleSection('faq',this)" /><span class="pb-toggle-slider"></span></label>
+        </div>
+        <div class="pb-section-body" id="faq-body">
+          <div class="pb-faq-item">
+            <div class="pb-feat-item-top"><span class="pb-feat-num">Q1</span><button class="pb-feat-remove" onclick="removeFaq(0)">Remove</button></div>
+            <div class="pb-field"><label class="pb-label">Question</label><input class="pb-input" value="When does it launch?" oninput="updateFaq(0,'q',this.value)" /></div>
+            <div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Answer</label><textarea class="pb-textarea" rows="2" oninput="updateFaq(0,'a',this.value)">We're aiming for a Q3 launch. Join the list to be first to know.</textarea></div>
+          </div>
+          <div class="pb-faq-item">
+            <div class="pb-feat-item-top"><span class="pb-feat-num">Q2</span><button class="pb-feat-remove" onclick="removeFaq(1)">Remove</button></div>
+            <div class="pb-field"><label class="pb-label">Question</label><input class="pb-input" value="How much will it cost?" oninput="updateFaq(1,'q',this.value)" /></div>
+            <div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Answer</label><textarea class="pb-textarea" rows="2" oninput="updateFaq(1,'a',this.value)">We'll have a free tier. Early members get an exclusive discount.</textarea></div>
+          </div>
+          <button class="pb-add-btn" onclick="addFaq()"><i class="ti ti-plus" style="font-size:12px;" aria-hidden="true"></i> Add question</button>
+        </div>
+      </div>
+
+      <div class="pb-section">
+        <div class="pb-section-header">
+          <span class="pb-section-title">Settings</span>
+        </div>
+        <div class="pb-section-body">
+          <div class="pb-field">
+            <label class="pb-label">Subdomain</label>
+            <div style="display:flex;align-items:center;gap:0;">
+              <input class="pb-input" style="border-radius:6px 0 0 6px;border-right:none;" value="myproduct" oninput="updateSubdomain(this.value)" />
+              <span style="padding:8px 10px;background:#f4f4f4;border:1px solid #e8e8e8;border-radius:0 6px 6px 0;font-size:12px;color:#666;white-space:nowrap;">.queued.io</span>
+            </div>
+          </div>
+          <div class="pb-toggle-row">
+            <span class="pb-toggle-label">Show signup count</span>
+            <label class="pb-toggle"><input type="checkbox" checked onchange="toggleCount(this)" /><span class="pb-toggle-slider"></span></label>
+          </div>
+          <div class="pb-toggle-row">
+            <span class="pb-toggle-label">Rotating placeholder emails</span>
+            <label class="pb-toggle"><input type="checkbox" checked /><span class="pb-toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pb-right">
+      <p class="pb-preview-label">Live preview</p>
+      <div class="pb-preview-frame">
+        <div class="pb-preview-url">
+          <div class="pb-preview-dots">
+            <div class="pb-preview-dot" style="background:#ff5f57;"></div>
+            <div class="pb-preview-dot" style="background:#febc2e;"></div>
+            <div class="pb-preview-dot" style="background:#28c840;"></div>
+          </div>
+          <div class="pb-preview-urlbar" id="urlbar">myproduct.queued.io</div>
+        </div>
+        <div class="pb-preview-content" id="preview-content">
+
+          <div class="pb-oat-hero" style="background:#FAF7F2;" id="hero-section">
+            <div class="pb-oat-logo"><i class="ti ti-bolt" style="font-size:15px;color:#FAF7F2;" aria-hidden="true"></i></div>
+            <div class="pb-oat-pill" id="coming-pill">Coming soon</div>
+            <h2 class="pb-oat-h1" id="prev-name">My product</h2>
+            <p class="pb-oat-tag" id="prev-tagline">The fastest way to launch your waitlist and start collecting signups today.</p>
+            <div class="pb-oat-form">
+              <input class="pb-oat-input" placeholder="you@email.com" />
+              <button class="pb-oat-btn" id="prev-btn">Join waitlist</button>
+            </div>
+            <p class="pb-oat-count" id="prev-count">Join 240 others already waiting</p>
+          </div>
+
+          <div id="highlights-preview" class="pb-highlights-preview" style="background:#F2EDE4;">
+            <p class="pb-hl-label">Highlights</p>
+            <div id="hl-rows"></div>
+          </div>
+
+          <div id="faq-preview" class="pb-faq-preview" style="background:#FAF7F2;">
+            <p class="pb-faq-label">FAQ</p>
+            <div id="faq-rows"></div>
+          </div>
+
+          <div class="pb-preview-footer" id="prev-footer" style="background:#F2EDE4;">
+            <p class="pb-preview-badge">Made with <strong>Queued</strong></p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var state = {
+  template: 'oat',
+  name: 'My product',
+  tagline: 'The fastest way to launch your waitlist and start collecting signups today.',
+  btn: 'Join waitlist',
+  showPill: true,
+  showCount: true,
+  showHighlights: true,
+  showFaq: true,
+  feats: [
+    { title: 'Launch in 60 seconds', desc: 'No design skills needed. Live instantly.' },
+    { title: 'Auto email collection', desc: 'Every signup stored and ready to export.' }
+  ],
+  faqs: [
+    { q: 'When does it launch?', a: 'Q3 this year. Join to be first to know.' },
+    { q: 'How much will it cost?', a: 'Free tier available. Early members get a discount.' }
+  ]
+};
+
+var templates = {
+  oat: {
+    heroBg: '#FAF7F2', hlBg: '#F2EDE4', faqBg: '#FAF7F2', footerBg: '#F2EDE4',
+    heroClass: 'pb-oat-hero', nameColor: '#2C2C2A', tagColor: '#5F5E5A',
+    btnBg: '#2C2C2A', btnColor: '#FAF7F2', inputBorder: '#D3D1C7', inputBg: '#fff',
+    countColor: '#888780', hlIconBg: '#FAF7F2', hlIconColor: '#D85A30',
+    hlTitleColor: '#2C2C2A', hlDescColor: '#5F5E5A', faqQColor: '#2C2C2A',
+    faqArrow: '#D85A30', showPill: true, pillBg: '#F0997B', pillColor: '#712B13'
+  },
+  slate: {
+    heroBg: '#F4F4F2', hlBg: '#fff', faqBg: '#F4F4F2', footerBg: '#fff',
+    nameColor: '#1a1a1a', tagColor: '#5F5E5A',
+    btnBg: '#185FA5', btnColor: '#fff', inputBorder: '#D3D1C7', inputBg: '#F4F4F2',
+    countColor: '#888780', hlIconBg: '#E6F1FB', hlIconColor: '#185FA5',
+    hlTitleColor: '#1a1a1a', hlDescColor: '#5F5E5A', faqQColor: '#1a1a1a',
+    faqArrow: '#185FA5', showPill: true, pillBg: '#E6F1FB', pillColor: '#0C447C'
+  },
+  ember: {
+    heroBg: '#1C1917', hlBg: '#231F1C', faqBg: '#1C1917', footerBg: '#141210',
+    nameColor: '#FAF7F2', tagColor: '#888780',
+    btnBg: '#EF9F27', btnColor: '#1C1917', inputBorder: '#444441', inputBg: '#2C2C2A',
+    countColor: '#5F5E5A', hlIconBg: '#2C2C2A', hlIconColor: '#EF9F27',
+    hlTitleColor: '#FAF7F2', hlDescColor: '#888780', faqQColor: '#FAF7F2',
+    faqArrow: '#EF9F27', showPill: false, pillBg: 'transparent', pillColor: '#EF9F27'
+  },
+  void: {
+    heroBg: '#fff', hlBg: '#F5F5F5', faqBg: '#fff', footerBg: '#000',
+    nameColor: '#000', tagColor: '#444',
+    btnBg: '#000', btnColor: '#fff', inputBorder: '#000', inputBg: '#fff',
+    countColor: '#888', hlIconBg: '#fff', hlIconColor: '#000',
+    hlTitleColor: '#000', hlDescColor: '#444', faqQColor: '#000',
+    faqArrow: '#000', showPill: true, pillBg: 'transparent', pillColor: '#000',
+    mono: true
+  }
+};
+
+function renderPreview() {
+  var t = templates[state.template];
+  var hero = document.getElementById('hero-section');
+  hero.style.background = t.heroBg;
+  if (t.mono) hero.style.fontFamily = 'monospace';
+  else hero.style.fontFamily = '';
+
+  document.getElementById('prev-name').textContent = state.name;
+  document.getElementById('prev-name').style.color = t.nameColor;
+  document.getElementById('prev-tagline').textContent = state.tagline;
+  document.getElementById('prev-tagline').style.color = t.tagColor;
+  document.getElementById('tb-name').textContent = state.name;
+
+  var btn = document.getElementById('prev-btn');
+  btn.textContent = state.btn;
+  btn.style.background = t.btnBg;
+  btn.style.color = t.btnColor;
+  if (t.mono) { btn.style.fontFamily = 'monospace'; btn.style.textTransform = 'uppercase'; btn.style.letterSpacing = '1px'; btn.style.fontSize = '9px'; }
+  else { btn.style.fontFamily = ''; btn.style.textTransform = ''; btn.style.letterSpacing = ''; btn.style.fontSize = '10px'; }
+
+  var pill = document.getElementById('coming-pill');
+  if (state.showPill && state.template !== 'ember') {
+    pill.style.display = 'inline-block';
+    pill.style.background = t.pillBg;
+    pill.style.color = t.pillColor;
+    if (t.mono) { pill.style.border = '1px solid #000'; pill.style.borderRadius = '0'; pill.style.fontSize = '7px'; pill.style.letterSpacing = '2px'; pill.style.textTransform = 'uppercase'; }
+    else { pill.style.border = 'none'; pill.style.borderRadius = '20px'; pill.style.fontSize = '9px'; pill.style.letterSpacing = ''; pill.style.textTransform = ''; }
+  } else if (state.template === 'ember') {
+    pill.style.display = 'inline-block';
+    pill.style.background = 'transparent';
+    pill.style.color = '#EF9F27';
+    pill.style.fontSize = '8px';
+    pill.style.letterSpacing = '2px';
+    pill.style.textTransform = 'uppercase';
+    pill.style.border = 'none';
+    pill.textContent = 'The waitlist is open';
+  } else {
+    pill.style.display = 'none';
+  }
+  if (state.template !== 'ember') pill.textContent = 'Coming soon';
+
+  var count = document.getElementById('prev-count');
+  count.style.display = state.showCount ? 'block' : 'none';
+  count.style.color = t.countColor;
+  if (t.mono) { count.textContent = '— 240 people waiting —'; count.style.letterSpacing = '1px'; count.style.textTransform = 'uppercase'; count.style.fontSize = '9px'; }
+  else { count.textContent = 'Join 240 others already waiting'; count.style.letterSpacing = ''; count.style.textTransform = ''; count.style.fontSize = '10px'; }
+
+  var hlPrev = document.getElementById('highlights-preview');
+  hlPrev.style.display = state.showHighlights ? 'block' : 'none';
+  hlPrev.style.background = t.hlBg;
+  if (t.hlBg === '#231F1C' || t.hlBg === '#1C1917') hlPrev.style.borderTop = '1px solid #333';
+  else hlPrev.style.borderTop = '1px solid #e8e8e8';
+  var hlRows = document.getElementById('hl-rows');
+  hlRows.innerHTML = '';
+  state.feats.forEach(function(f) {
+    var row = document.createElement('div');
+    row.className = 'pb-hl-row';
+    row.innerHTML = '<div class="pb-hl-icon" style="background:'+t.hlIconBg+';border:'+(t.mono?'1px solid #000':'none')+'"><i class="ti ti-check" style="font-size:11px;color:'+t.hlIconColor+';"></i></div><div><p class="pb-hl-title" style="color:'+t.hlTitleColor+(t.mono?';text-transform:uppercase;font-size:9px;letter-spacing:1px;font-family:monospace':'')+'">' + f.title + '</p><p class="pb-hl-desc" style="color:'+t.hlDescColor+(t.mono?';font-family:monospace':'')+'">' + f.desc + '</p></div>';
+    hlRows.appendChild(row);
+  });
+
+  var faqPrev = document.getElementById('faq-preview');
+  faqPrev.style.display = state.showFaq ? 'block' : 'none';
+  faqPrev.style.background = t.faqBg;
+  if (t.faqBg === '#1C1917') faqPrev.style.borderTop = '1px solid #333';
+  else faqPrev.style.borderTop = '1px solid #e8e8e8';
+  var faqRows = document.getElementById('faq-rows');
+  faqRows.innerHTML = '';
+  state.faqs.forEach(function(f) {
+    var row = document.createElement('div');
+    row.className = 'pb-faq-row';
+    row.style.borderTopColor = t.mono ? '#000' : (t.faqBg === '#1C1917' ? '#333' : '#e8e8e8');
+    row.innerHTML = '<p class="pb-faq-q" style="color:'+t.faqQColor+(t.mono?';font-family:monospace':'')+'">' + f.q + '</p><i class="ti ti-chevron-down" style="font-size:11px;color:'+t.faqArrow+';" aria-hidden="true"></i>';
+    faqRows.appendChild(row);
+  });
+
+  var footer = document.getElementById('prev-footer');
+  footer.style.background = t.footerBg;
+  footer.style.borderTop = t.footerBg === '#000' ? 'none' : '1px solid #e8e8e8';
+  var badge = footer.querySelector('.pb-preview-badge');
+  badge.style.color = t.footerBg === '#000' ? '#555' : '#999';
+  if (t.mono) badge.style.fontFamily = 'monospace';
+  else badge.style.fontFamily = '';
+}
+
+function setTemplate(name, el) {
+  state.template = name;
+  document.querySelectorAll('.pb-tmpl-opt').forEach(function(o) { o.classList.remove('active'); });
+  el.classList.add('active');
+  renderPreview();
+}
+
+function updateField(field, val) {
+  if (field === 'name') state.name = val;
+  if (field === 'tagline') state.tagline = val;
+  if (field === 'btn') state.btn = val;
+  renderPreview();
+}
+
+function updatePill(el) { state.showPill = el.checked; renderPreview(); }
+function toggleCount(el) { state.showCount = el.checked; renderPreview(); }
+
+function toggleSection(sec, el) {
+  if (sec === 'highlights') { state.showHighlights = el.checked; document.getElementById('highlights-body').style.display = el.checked ? 'block' : 'none'; }
+  if (sec === 'faq') { state.showFaq = el.checked; document.getElementById('faq-body').style.display = el.checked ? 'block' : 'none'; }
+  renderPreview();
+}
+
+function updateFeat(i, field, val) { if (state.feats[i]) { state.feats[i][field] = val; renderPreview(); } }
+function updateFaq(i, field, val) { if (state.faqs[i]) { state.faqs[i][field] = val; renderPreview(); } }
+
+function addFeat() {
+  if (state.feats.length >= 3) return;
+  state.feats.push({ title: 'New feature', desc: 'Describe this feature here.' });
+  rebuildFeats(); renderPreview();
+}
+
+function removeFeat(i) {
+  state.feats.splice(i, 1);
+  rebuildFeats(); renderPreview();
+}
+
+function rebuildFeats() {
+  var body = document.getElementById('highlights-body');
+  var btn = body.querySelector('.pb-add-btn');
+  body.querySelectorAll('.pb-feat-item').forEach(function(el) { el.remove(); });
+  state.feats.forEach(function(f, i) {
+    var div = document.createElement('div');
+    div.className = 'pb-feat-item';
+    div.innerHTML = '<div class="pb-feat-item-top"><span class="pb-feat-num">Feature '+(i+1)+'</span><button class="pb-feat-remove" onclick="removeFeat('+i+')">Remove</button></div><div class="pb-field"><label class="pb-label">Title</label><input class="pb-input" value="'+f.title+'" oninput="updateFeat('+i+',\'title\',this.value)" /></div><div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Description</label><input class="pb-input" value="'+f.desc+'" oninput="updateFeat('+i+',\'desc\',this.value)" /></div>';
+    body.insertBefore(div, btn);
+  });
+}
+
+function addFaq() {
+  if (state.faqs.length >= 5) return;
+  state.faqs.push({ q: 'New question?', a: 'Your answer here.' });
+  rebuildFaqs(); renderPreview();
+}
+
+function removeFaq(i) {
+  state.faqs.splice(i, 1);
+  rebuildFaqs(); renderPreview();
+}
+
+function rebuildFaqs() {
+  var body = document.getElementById('faq-body');
+  var btn = body.querySelector('.pb-add-btn');
+  body.querySelectorAll('.pb-faq-item').forEach(function(el) { el.remove(); });
+  state.faqs.forEach(function(f, i) {
+    var div = document.createElement('div');
+    div.className = 'pb-faq-item';
+    div.innerHTML = '<div class="pb-feat-item-top"><span class="pb-feat-num">Q'+(i+1)+'</span><button class="pb-feat-remove" onclick="removeFaq('+i+')">Remove</button></div><div class="pb-field"><label class="pb-label">Question</label><input class="pb-input" value="'+f.q+'" oninput="updateFaq('+i+',\'q\',this.value)" /></div><div class="pb-field" style="margin-bottom:0;"><label class="pb-label">Answer</label><textarea class="pb-textarea" rows="2" oninput="updateFaq('+i+',\'a\',this.value)">'+f.a+'</textarea></div>';
+    body.insertBefore(div, btn);
+  });
+}
+
+function updateSubdomain(val) {
+  document.getElementById('urlbar').textContent = val + '.queued.io';
+  document.querySelector('.pb-topbar-link').innerHTML = '<i class="ti ti-external-link" style="font-size:12px;"></i> ' + val + '.queued.io';
+}
+
+renderPreview();
+</script>
