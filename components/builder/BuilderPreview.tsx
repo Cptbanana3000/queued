@@ -29,6 +29,7 @@ export default function BuilderPreview({ state }: BuilderPreviewProps) {
         buttonText={state.buttonText || 'Join waitlist'}
         showCount={state.showCount}
         comingSoon={state.comingSoon}
+        showRecentSignups={state.showRecentSignups}
         subscriberCount={0}
         highlights={state.showHighlights ? state.highlights : []}
         faq={state.showFaq ? state.faq : []}

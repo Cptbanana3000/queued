@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
+import RecentSignups from '@/components/templates/RecentSignups'
 
 interface TemplateProps {
   waitlistId: string
@@ -10,6 +11,7 @@ interface TemplateProps {
   buttonText: string
   showCount: boolean
   comingSoon: boolean
+  showRecentSignups: boolean
   subscriberCount: number
   highlights: Highlight[]
   faq: FaqItem[]
@@ -22,6 +24,7 @@ export default function VoidTemplate({
   buttonText,
   showCount,
   comingSoon,
+  showRecentSignups,
   subscriberCount,
   highlights,
   faq,
@@ -115,9 +118,18 @@ export default function VoidTemplate({
           )}
 
           {showCount && (
-            <p style={{ fontSize: '12px', color: '#888', margin: 0, textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <p style={{ fontSize: '12px', color: '#888', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
               — {subscriberCount} people waiting —
             </p>
+          )}
+
+          {showRecentSignups && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4px' }}>
+              <RecentSignups
+                color="#000" mutedColor="#888" dotColor="#000"
+                fontFamily="var(--font-mono)"
+              />
+            </div>
           )}
         </form>
       </div>

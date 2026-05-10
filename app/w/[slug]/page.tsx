@@ -32,6 +32,7 @@ export default async function PublicWaitlistPage({ params }: { params: Promise<{
     buttonText: waitlist.button_text,
     showCount: waitlist.show_count,
     comingSoon: waitlist.coming_soon,
+    showRecentSignups: waitlist.show_recent_signups ?? true,
     subscriberCount: count ?? 0,
     highlights: (waitlist.highlights ?? []) as Highlight[],
     faq: (waitlist.faq ?? []) as FaqItem[],

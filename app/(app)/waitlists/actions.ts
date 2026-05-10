@@ -75,6 +75,7 @@ export async function createWaitlist(
   const showCount  = formData.get('showCount') === 'true'
   const comingSoon = formData.get('comingSoon') === 'true'
   const published  = formData.get('published') === 'true'
+  const showRecentSignups = formData.get('showRecentSignups') !== 'false'
 
   let highlights = []
   let faq = []
@@ -92,6 +93,7 @@ export async function createWaitlist(
       button_text: buttonText,
       show_count: showCount,
       coming_soon: comingSoon,
+      show_recent_signups: showRecentSignups,
       highlights,
       faq,
       published,
@@ -129,6 +131,7 @@ export async function updateWaitlist(
   const showCount  = formData.get('showCount') === 'true'
   const comingSoon = formData.get('comingSoon') === 'true'
   const published  = formData.get('published') === 'true'
+  const showRecentSignups = formData.get('showRecentSignups') !== 'false'
 
   let highlights = []
   let faq = []
@@ -144,6 +147,7 @@ export async function updateWaitlist(
       button_text: buttonText,
       show_count: showCount,
       coming_soon: comingSoon,
+      show_recent_signups: showRecentSignups,
       highlights,
       faq,
       published,

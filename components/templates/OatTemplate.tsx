@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
+import RecentSignups from '@/components/templates/RecentSignups'
 
 interface TemplateProps {
   waitlistId: string
@@ -10,6 +11,7 @@ interface TemplateProps {
   buttonText: string
   showCount: boolean
   comingSoon: boolean
+  showRecentSignups: boolean
   subscriberCount: number
   highlights: Highlight[]
   faq: FaqItem[]
@@ -22,6 +24,7 @@ export default function OatTemplate({
   buttonText,
   showCount,
   comingSoon,
+  showRecentSignups,
   subscriberCount,
   highlights,
   faq,
@@ -123,9 +126,15 @@ export default function OatTemplate({
           )}
 
           {showCount && (
-            <p style={{ fontSize: '13px', color: '#888780', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: '#888780', margin: '0 0 12px' }}>
               Join {subscriberCount} others already waiting
             </p>
+          )}
+
+          {showRecentSignups && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4px' }}>
+              <RecentSignups color="#2C2C2A" mutedColor="#888780" dotColor="#D85A30" />
+            </div>
           )}
         </form>
       </div>

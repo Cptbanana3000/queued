@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
+import RecentSignups from '@/components/templates/RecentSignups'
 
 interface TemplateProps {
   waitlistId: string
@@ -10,6 +11,7 @@ interface TemplateProps {
   buttonText: string
   showCount: boolean
   comingSoon: boolean
+  showRecentSignups: boolean
   subscriberCount: number
   highlights: Highlight[]
   faq: FaqItem[]
@@ -22,6 +24,7 @@ export default function SlateTemplate({
   buttonText,
   showCount,
   comingSoon,
+  showRecentSignups,
   subscriberCount,
   highlights,
   faq,
@@ -126,6 +129,11 @@ export default function SlateTemplate({
                <p style={{ fontSize: '12px', color: '#888780', textAlign: 'center', margin: '12px 0 0' }}>
                  No spam, ever.
                </p>
+            )}
+            {showRecentSignups && (
+              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+                <RecentSignups color="#1a1a1a" mutedColor="#888780" dotColor="#185FA5" />
+              </div>
             )}
           </form>
         </div>

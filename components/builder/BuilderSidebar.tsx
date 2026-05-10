@@ -163,6 +163,7 @@ export default function BuilderSidebar({ state, onChange }: BuilderSidebarProps)
       <div style={sectionStyle}>
         <Toggle label="Show signup count" checked={state.showCount} onChange={v => set('showCount', v)} />
         <Toggle label='"Coming soon" badge' checked={state.comingSoon} onChange={v => set('comingSoon', v)} />
+        <Toggle label="Recent signups ticker" checked={state.showRecentSignups} onChange={v => set('showRecentSignups', v)} />
       </div>
 
       {/* ── Highlights (max 3) ───────────────────── */}

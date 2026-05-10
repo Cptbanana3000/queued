@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
+import RecentSignups from '@/components/templates/RecentSignups'
 
 interface TemplateProps {
   waitlistId: string
@@ -10,6 +11,7 @@ interface TemplateProps {
   buttonText: string
   showCount: boolean
   comingSoon: boolean
+  showRecentSignups: boolean
   subscriberCount: number
   highlights: Highlight[]
   faq: FaqItem[]
@@ -22,6 +24,7 @@ export default function EmberTemplate({
   buttonText,
   showCount,
   comingSoon,
+  showRecentSignups,
   subscriberCount,
   highlights,
   faq,
@@ -113,9 +116,15 @@ export default function EmberTemplate({
           )}
 
           {showCount && (
-            <p style={{ fontSize: '13px', color: '#5F5E5A', margin: 0 }}>
+            <p style={{ fontSize: '13px', color: '#5F5E5A', margin: '0 0 12px' }}>
               — {subscriberCount} people already waiting —
             </p>
+          )}
+
+          {showRecentSignups && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4px' }}>
+              <RecentSignups color="#FAF7F2" mutedColor="#5F5E5A" dotColor="#EF9F27" />
+            </div>
           )}
         </form>
       </div>

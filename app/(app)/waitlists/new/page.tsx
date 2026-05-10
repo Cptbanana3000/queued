@@ -13,25 +13,24 @@ export default function NewWaitlistPage() {
     createWaitlist, undefined,
   )
 
-  const handleSubmit = (formData: FormData) => {
-    formData.set('name', state.name)
-    formData.set('slug', state.slug || state.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
-    formData.set('template', state.template)
-    formData.set('tagline', state.tagline)
-    formData.set('buttonText', state.buttonText)
-    formData.set('showCount', String(state.showCount))
-    formData.set('comingSoon', String(state.comingSoon))
-    formData.set('highlights', JSON.stringify(state.showHighlights ? state.highlights : []))
-    formData.set('faq', JSON.stringify(state.showFaq ? state.faq : []))
-    formData.set('published', 'false')
-    formAction(formData)
+  const buildFormData = (published: boolean): FormData => {
+    const fd = new FormData()
+    fd.set('name', state.name)
+    fd.set('slug', state.slug || state.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))
+    fd.set('template', state.template)
+    fd.set('tagline', state.tagline)
+    fd.set('buttonText', state.buttonText)
+    fd.set('showCount', String(state.showCount))
+    fd.set('comingSoon', String(state.comingSoon))
+    fd.set('showRecentSignups', String(state.showRecentSignups))
+    fd.set('highlights', JSON.stringify(state.showHighlights ? state.highlights : []))
+    fd.set('faq', JSON.stringify(state.showFaq ? state.faq : []))
+    fd.set('published', String(published))
+    return fd
   }
 
   return (
-    <form
-      action={handleSubmit}
-      style={{ display: 'flex', height: 'calc(100dvh)', backgroundColor: 'var(--color-surface)' }}
-    >
+    <div style={{ display: 'flex', height: 'calc(100dvh)', backgroundColor: 'var(--color-surface)' }}>
       {/* Sidebar form */}
       <BuilderSidebar state={state} onChange={setState} />
 
@@ -41,7 +40,7 @@ export default function NewWaitlistPage() {
         <div style={{
           padding: '12px 24px', borderBottom: '1px solid var(--color-border)',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          backgroundColor: 'var(--color-surface-raised)',
+          backgroundColor: 'var(--color-surface-raised)', flexShrink: 0,
         }}>
           <div>
             <h1 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
@@ -52,32 +51,27 @@ export default function NewWaitlistPage() {
             </p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            {/* Save as draft */}
             <button
-              type="submit"
+              type="button"
+              onClick={() => formAction(buildFormData(false))}
               disabled={pending || !state.name.trim()}
               style={{
                 padding: '8px 16px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
                 border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-raised)',
                 color: 'var(--color-text)', cursor: pending ? 'not-allowed' : 'pointer',
-                transition: 'border-color 0.15s',
+                opacity: pending ? 0.6 : 1,
               }}
             >
               {pending ? 'Saving…' : 'Save as draft'}
             </button>
-            {/* Publish */}
             <button
-              type="submit"
+              type="button"
+              onClick={() => formAction(buildFormData(true))}
               disabled={pending || !state.name.trim()}
-              onClick={() => {
-                // set a hidden flag to publish on submit
-                const hidden = document.getElementById('__publish_flag') as HTMLInputElement | null
-                if (hidden) hidden.value = 'true'
-              }}
               style={{
                 padding: '8px 16px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
                 border: 'none', backgroundColor: 'var(--color-text)', color: '#fff',
-                cursor: pending ? 'not-allowed' : 'pointer', transition: 'background-color 0.15s',
+                cursor: pending ? 'not-allowed' : 'pointer', opacity: pending ? 0.6 : 1,
               }}
             >
               {pending ? 'Publishing…' : 'Publish'}
@@ -88,7 +82,7 @@ export default function NewWaitlistPage() {
         {/* Error message */}
         {actionState && !actionState.success && (
           <div style={{
-            margin: '12px 24px 0', padding: '10px 14px', borderRadius: '8px',
+            margin: '12px 24px 0', padding: '10px 14px', borderRadius: '8px', flexShrink: 0,
             backgroundColor: 'var(--color-danger-bg)', border: '1px solid #f5c6c6',
             fontSize: '13px', color: 'var(--color-danger)',
           }}>
@@ -99,9 +93,6 @@ export default function NewWaitlistPage() {
         {/* Live preview */}
         <BuilderPreview state={state} />
       </div>
-
-      {/* Hidden input for publish flag */}
-      <input type="hidden" id="__publish_flag" name="published" value="false" />
-    </form>
+    </div>
   )
 }

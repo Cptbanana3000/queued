@@ -28,6 +28,7 @@ export default async function EditWaitlistPage({ params }: { params: Promise<{ i
     template: waitlist.template as Template,
     showCount: waitlist.show_count,
     comingSoon: waitlist.coming_soon,
+    showRecentSignups: waitlist.show_recent_signups ?? true,
     showHighlights: highlights.length > 0,
     highlights,
     showFaq: faq.length > 0,

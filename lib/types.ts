@@ -88,6 +88,7 @@ export interface BuilderState {
   template: Template
   showCount: boolean
   comingSoon: boolean
+  showRecentSignups: boolean
   showHighlights: boolean
   highlights: Highlight[]
   showFaq: boolean
@@ -102,6 +103,7 @@ export const DEFAULT_BUILDER_STATE: BuilderState = {
   template: 'oat',
   showCount: true,
   comingSoon: false,
+  showRecentSignups: true,
   showHighlights: false,
   highlights: [],
   showFaq: false,
