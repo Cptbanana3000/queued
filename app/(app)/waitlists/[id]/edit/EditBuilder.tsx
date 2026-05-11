@@ -22,6 +22,7 @@ export default function EditBuilder({ id, initial, published }: EditBuilderProps
     const fd = new FormData()
     fd.set('id', id)
     fd.set('name', state.name)
+    fd.set('slug', state.slug)
     fd.set('template', state.template)
     fd.set('tagline', state.tagline)
     fd.set('buttonText', state.buttonText)

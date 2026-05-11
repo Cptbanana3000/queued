@@ -133,6 +133,9 @@ export async function updateWaitlist(
   const published  = formData.get('published') === 'true'
   const showRecentSignups = formData.get('showRecentSignups') !== 'false'
 
+  const rawSlug = (formData.get('slug') as string)?.trim()
+  const slug = rawSlug ? slugify(rawSlug) : undefined
+
   let highlights = []
   let faq = []
   try { highlights = JSON.parse(formData.get('highlights') as string || '[]') } catch {}
@@ -142,6 +145,7 @@ export async function updateWaitlist(
     .from('waitlists')
     .update({
       name,
+      ...(slug ? { slug } : {}),
       template,
       tagline,
       button_text: buttonText,
@@ -156,8 +160,30 @@ export async function updateWaitlist(
     .eq('user_id', user.id)
 
   if (error) {
+    if (error.message.includes('duplicate') || error.message.includes('unique')) {
+      return { success: false, message: 'That slug is already taken. Try a different one.' }
+    }
     return { success: false, message: error.message }
   }
 
   return { success: true, message: 'Waitlist updated.' }
 }
+
+export async function toggleWaitlistPublished(
+  id: string,
+  published: boolean,
+): Promise<ActionState> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, message: 'Not authenticated.' }
+
+  const { error } = await supabase
+    .from('waitlists')
+    .update({ published })
+    .eq('id', id)
+    .eq('user_id', user.id)
+
+  if (error) return { success: false, message: error.message }
+  return { success: true, message: published ? 'Waitlist is now live.' : 'Waitlist set to draft.' }
+}
+

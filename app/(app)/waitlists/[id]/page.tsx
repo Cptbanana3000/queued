@@ -112,6 +112,7 @@ export default async function WaitlistDetailPage({ params }: { params: Promise<{
       {/* Tabs */}
       <WaitlistTabs
         waitlistId={id}
+        slug={waitlist.slug}
         subscribers={subs}
         plan={plan}
         published={waitlist.published}

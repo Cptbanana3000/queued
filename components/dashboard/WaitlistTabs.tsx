@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Link from 'next/link'
 import type { Subscriber } from '@/lib/types'
-import { deleteWaitlist } from '@/app/(app)/waitlists/actions'
+import { deleteWaitlist, toggleWaitlistPublished } from '@/app/(app)/waitlists/actions'
 
 interface WaitlistTabsProps {
   waitlistId: string
+  slug: string
   subscribers: Subscriber[]
   plan: 'free' | 'pro'
   published: boolean
@@ -14,7 +16,7 @@ interface WaitlistTabsProps {
 const TABS = ['Subscribers', 'Settings'] as const
 type Tab = typeof TABS[number]
 
-export default function WaitlistTabs({ waitlistId, subscribers, plan, published }: WaitlistTabsProps) {
+export default function WaitlistTabs({ waitlistId, slug, subscribers, plan, published }: WaitlistTabsProps) {
   const [tab, setTab] = useState<Tab>('Subscribers')
 
   return (
@@ -53,7 +55,7 @@ export default function WaitlistTabs({ waitlistId, subscribers, plan, published 
         <SubscribersPanel subscribers={subscribers} plan={plan} />
       )}
       {tab === 'Settings' && (
-        <SettingsPanel waitlistId={waitlistId} published={published} />
+        <SettingsPanel waitlistId={waitlistId} slug={slug} published={published} />
       )}
     </div>
   )
@@ -145,11 +147,14 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
 }
 
 /* ── Settings panel ─────────────────────────────────── */
-function SettingsPanel({ waitlistId, published }: { waitlistId: string; published: boolean }) {
+function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; slug: string; published: boolean }) {
   const [copyText, setCopyText] = useState('Copy link')
-  const [isPending, startTransition] = useTransition()
+  const [isPublished, setIsPublished] = useState(published)
+  const [isPendingDelete, startDeleteTransition] = useTransition()
+  const [isPendingPublish, startPublishTransition] = useTransition()
+  const [publishError, setPublishError] = useState<string | null>(null)
 
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/w/${waitlistId}`
+  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/w/${slug}`
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl)
@@ -157,20 +162,37 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
     setTimeout(() => setCopyText('Copy link'), 2000)
   }
 
+  const handleTogglePublish = () => {
+    const next = !isPublished
+    setPublishError(null)
+    startPublishTransition(async () => {
+      const result = await toggleWaitlistPublished(waitlistId, next)
+      if (result && !result.success) {
+        setPublishError(result.message)
+      } else {
+        setIsPublished(next)
+      }
+    })
+  }
+
   const handleDelete = () => {
     if (!confirm('Are you sure you want to delete this waitlist? This will permanently remove all subscriber data and cannot be undone.')) return
-    startTransition(() => { deleteWaitlist(waitlistId) })
+    startDeleteTransition(() => { deleteWaitlist(waitlistId) })
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
       {/* Share link */}
       <div style={{
         backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-border)',
         borderRadius: '10px', padding: '20px',
       }}>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)', margin: '0 0 10px' }}>
+        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)', margin: '0 0 4px' }}>
           Share link
+        </p>
+        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '0 0 12px' }}>
+          Send this to people you want to invite to your waitlist.
         </p>
         <div style={{ display: 'flex', gap: '8px' }}>
           <input
@@ -193,21 +215,78 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
           >
             {copyText}
           </button>
+          <a
+            href={`/w/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              padding: '9px 14px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
+              border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-raised)',
+              color: 'var(--color-text)', textDecoration: 'none', whiteSpace: 'nowrap',
+            }}
+          >
+            Open ↗
+          </a>
         </div>
       </div>
 
-      {/* Status */}
+      {/* Publish status */}
       <div style={{
         backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-border)',
         borderRadius: '10px', padding: '20px',
       }}>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)', margin: '0 0 6px' }}>
-          Status
-        </p>
-        <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: 0 }}>
-          This waitlist is currently <strong>{published ? 'published' : 'a draft'}</strong>.
-          {!published && ' Publish it from the page builder to make it live.'}
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)', margin: '0 0 4px' }}>
+              {isPublished ? 'Live' : 'Draft'}
+            </p>
+            <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0 }}>
+              {isPublished
+                ? 'Your waitlist is publicly accessible.'
+                : 'Only you can see this. Publish to go live.'}
+            </p>
+          </div>
+          <button
+            onClick={handleTogglePublish}
+            disabled={isPendingPublish}
+            style={{
+              padding: '8px 18px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
+              border: 'none',
+              backgroundColor: isPublished ? 'var(--color-surface-inset)' : 'var(--color-text)',
+              color: isPublished ? 'var(--color-text)' : '#fff',
+              cursor: isPendingPublish ? 'not-allowed' : 'pointer',
+              opacity: isPendingPublish ? 0.6 : 1, whiteSpace: 'nowrap',
+            }}
+          >
+            {isPendingPublish ? '…' : isPublished ? 'Unpublish' : 'Publish'}
+          </button>
+        </div>
+        {publishError && (
+          <p style={{ fontSize: '12px', color: 'var(--color-danger)', margin: '10px 0 0' }}>{publishError}</p>
+        )}
+      </div>
+
+      {/* Edit page link */}
+      <div style={{
+        backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-border)',
+        borderRadius: '10px', padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      }}>
+        <div>
+          <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)', margin: '0 0 4px' }}>Edit page</p>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0 }}>
+            Change your template, content, and settings.
+          </p>
+        </div>
+        <Link
+          href={`/waitlists/${waitlistId}/edit`}
+          style={{
+            padding: '8px 18px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
+            border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)',
+            color: 'var(--color-text)', textDecoration: 'none', whiteSpace: 'nowrap',
+          }}
+        >
+          Open builder →
+        </Link>
       </div>
 
       {/* Danger zone */}
@@ -215,7 +294,7 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
         backgroundColor: 'var(--color-danger-bg)', border: '1px solid #f5c6c6',
         borderRadius: '10px', padding: '20px',
       }}>
-        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-danger)', margin: '0 0 6px' }}>
+        <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-danger)', margin: '0 0 4px' }}>
           Danger zone
         </p>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: '0 0 12px' }}>
@@ -223,18 +302,17 @@ function SettingsPanel({ waitlistId, published }: { waitlistId: string; publishe
         </p>
         <button
           onClick={handleDelete}
-          disabled={isPending}
+          disabled={isPendingDelete}
           style={{
             padding: '7px 14px', borderRadius: '7px', fontSize: '12px', fontWeight: 500,
             border: '1px solid var(--color-danger)', backgroundColor: 'transparent',
-            color: 'var(--color-danger)', cursor: isPending ? 'not-allowed' : 'pointer',
-            opacity: isPending ? 0.6 : 1,
+            color: 'var(--color-danger)', cursor: isPendingDelete ? 'not-allowed' : 'pointer',
+            opacity: isPendingDelete ? 0.6 : 1,
           }}
         >
-          {isPending ? 'Deleting…' : 'Delete waitlist'}
+          {isPendingDelete ? 'Deleting…' : 'Delete waitlist'}
         </button>
       </div>
     </div>
   )
 }
-
