@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 
 const POOL = [
   'j***n@gmail.com',   'as***k@gmail.com',  'm***5@hotmail.com',
@@ -34,9 +34,14 @@ interface RecentSignupsProps {
 }
 
 export default function RecentSignups({ color, mutedColor, dotColor, fontFamily }: RecentSignupsProps) {
-  const emails = useMemo(() => shuffle(POOL), [])
+  // Start with stable pool (matches SSR), shuffle only after client mount
+  const [emails, setEmails] = useState<string[]>(POOL)
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    setEmails(shuffle(POOL))
+  }, [])
 
   useEffect(() => {
     const id = setInterval(() => {
