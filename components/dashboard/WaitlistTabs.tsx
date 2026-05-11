@@ -153,7 +153,7 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
   const [copyText, setCopyText] = useState('Copy link')
   const [isPublished, setIsPublished] = useState(published)
   const [isPendingDelete, startDeleteTransition] = useTransition()
-  const [isPendingPublish, startPublishTransition] = useTransition()
+  const [isPendingPublish, setIsPendingPublish] = useState(false)
   const [publishError, setPublishError] = useState<string | null>(null)
 
   const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/w/${slug}`
@@ -164,23 +164,26 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
     setTimeout(() => setCopyText('Copy link'), 2000)
   }
 
-  const handleTogglePublish = () => {
+  const handleTogglePublish = async () => {
     const next = !isPublished
-    // Optimistic update — happens synchronously, before any async work
     setIsPublished(next)
     setPublishError(null)
+    setIsPendingPublish(true)
 
-    startPublishTransition(async () => {
+    try {
       const result = await toggleWaitlistPublished(waitlistId, next)
       if (result && !result.success) {
-        // Rollback on error
         setIsPublished(!next)
         setPublishError(result.message)
       } else {
-        // Sync real server state into the page cache
         router.refresh()
       }
-    })
+    } catch {
+      setIsPublished(!next)
+      setPublishError('Something went wrong.')
+    } finally {
+      setIsPendingPublish(false)
+    }
   }
 
   const handleDelete = () => {
