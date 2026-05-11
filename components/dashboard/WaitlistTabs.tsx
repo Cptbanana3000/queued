@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import type { Subscriber } from '@/lib/types'
 import { deleteWaitlist, toggleWaitlistPublished } from '@/app/(app)/waitlists/actions'
 
@@ -148,6 +149,7 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
 
 /* ── Settings panel ─────────────────────────────────── */
 function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; slug: string; published: boolean }) {
+  const router = useRouter()
   const [copyText, setCopyText] = useState('Copy link')
   const [isPublished, setIsPublished] = useState(published)
   const [isPendingDelete, startDeleteTransition] = useTransition()
@@ -164,13 +166,19 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
 
   const handleTogglePublish = () => {
     const next = !isPublished
+    // Optimistic update — happens synchronously, before any async work
+    setIsPublished(next)
     setPublishError(null)
+
     startPublishTransition(async () => {
       const result = await toggleWaitlistPublished(waitlistId, next)
       if (result && !result.success) {
+        // Rollback on error
+        setIsPublished(!next)
         setPublishError(result.message)
       } else {
-        setIsPublished(next)
+        // Sync real server state into the page cache
+        router.refresh()
       }
     })
   }
