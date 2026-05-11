@@ -27,7 +27,7 @@ export async function login(
     return { success: false, message: error.message }
   }
 
-  redirect('/dashboard')
+  return { success: true, redirectTo: '/dashboard' }
 }
 
 // ── Signup ────────────────────────────────────────────────────────
@@ -69,7 +69,7 @@ export async function signup(
   // Supabase may require email confirmation depending on project settings.
   // If email confirm is OFF, the user is logged in immediately → redirect.
   // If email confirm is ON, we get no session yet → show a success message.
-  redirect('/dashboard')
+  return { success: true, redirectTo: '/dashboard' }
 }
 
 // ── Logout ────────────────────────────────────────────────────────

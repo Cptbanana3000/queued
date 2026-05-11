@@ -1,15 +1,23 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signup } from '../actions'
 import type { ActionState } from '@/lib/types'
 
 export default function SignupPage() {
+  const router = useRouter()
   const [state, action, pending] = useActionState<ActionState, FormData>(
     signup,
     undefined,
   )
+
+  useEffect(() => {
+    if (state?.success && state.redirectTo) {
+      router.push(state.redirectTo)
+    }
+  }, [state, router])
 
   const inputStyle: React.CSSProperties = {
     height: '42px',

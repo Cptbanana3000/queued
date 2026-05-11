@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { ActionState } from '@/lib/types'
 import { PLAN_LIMITS } from '@/lib/types'
@@ -18,7 +17,7 @@ export async function deleteWaitlist(id: string): Promise<ActionState> {
 
   if (error) return { success: false, message: error.message }
 
-  redirect('/dashboard')
+  return { success: true, redirectTo: '/dashboard' }
 }
 
 
@@ -108,7 +107,7 @@ export async function createWaitlist(
     return { success: false, message: error.message }
   }
 
-  redirect(`/waitlists/${data.id}`)
+  return { success: true, redirectTo: `/waitlists/${data.id}` }
 }
 
 export async function updateWaitlist(

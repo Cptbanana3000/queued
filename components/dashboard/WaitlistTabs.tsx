@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Subscriber } from '@/lib/types'
@@ -152,7 +152,7 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
   const router = useRouter()
   const [copyText, setCopyText] = useState('Copy link')
   const [isPublished, setIsPublished] = useState(published)
-  const [isPendingDelete, startDeleteTransition] = useTransition()
+  const [isPendingDelete, setIsPendingDelete] = useState(false)
   const [isPendingPublish, setIsPendingPublish] = useState(false)
   const [publishError, setPublishError] = useState<string | null>(null)
 
@@ -186,9 +186,20 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
     }
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this waitlist? This will permanently remove all subscriber data and cannot be undone.')) return
-    startDeleteTransition(() => { deleteWaitlist(waitlistId) })
+    setIsPendingDelete(true)
+    try {
+      const result = await deleteWaitlist(waitlistId)
+      if (result?.success && result.redirectTo) {
+        router.push(result.redirectTo)
+      } else if (result && !result.success) {
+        setPublishError(result.message)
+        setIsPendingDelete(false)
+      }
+    } catch {
+      setIsPendingDelete(false)
+    }
   }
 
   return (

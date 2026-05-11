@@ -1,15 +1,23 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { login } from '../actions'
 import type { ActionState } from '@/lib/types'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [state, action, pending] = useActionState<ActionState, FormData>(
     login,
     undefined,
   )
+
+  useEffect(() => {
+    if (state?.success && state.redirectTo) {
+      router.push(state.redirectTo)
+    }
+  }, [state, router])
 
   return (
     <div style={{ width: '100%', maxWidth: '400px' }}>

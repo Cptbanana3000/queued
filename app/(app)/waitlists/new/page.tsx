@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useActionState } from 'react'
+import { useState, useActionState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createWaitlist } from '../actions'
 import BuilderSidebar from '@/components/builder/BuilderSidebar'
 import BuilderPreview from '@/components/builder/BuilderPreview'
@@ -8,10 +9,18 @@ import type { BuilderState, ActionState } from '@/lib/types'
 import { DEFAULT_BUILDER_STATE } from '@/lib/types'
 
 export default function NewWaitlistPage() {
+  const router = useRouter()
   const [state, setState] = useState<BuilderState>(DEFAULT_BUILDER_STATE)
   const [actionState, formAction, pending] = useActionState<ActionState, FormData>(
     createWaitlist, undefined,
   )
+
+  // Handle redirect returned from server action
+  useEffect(() => {
+    if (actionState?.success && actionState.redirectTo) {
+      router.push(actionState.redirectTo)
+    }
+  }, [actionState, router])
 
   const buildFormData = (published: boolean): FormData => {
     const fd = new FormData()

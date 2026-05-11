@@ -76,7 +76,7 @@ export interface Subscriber {
 
 // ── Form state types ──────────────────────────────────────────────
 export type ActionState =
-  | { success: true; message?: string }
+  | { success: true; message?: string; redirectTo?: string }
   | { success: false; message: string; errors?: Record<string, string[]> }
   | undefined
 
