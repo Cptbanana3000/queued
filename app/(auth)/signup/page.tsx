@@ -19,6 +19,52 @@ export default function SignupPage() {
     }
   }, [state, router])
 
+  // Email confirmation required — show inbox prompt
+  if (state?.success && !state.redirectTo) {
+    return (
+      <div style={{ width: '100%', maxWidth: '400px', textAlign: 'center' }}>
+        <div style={{
+          backgroundColor: 'var(--color-surface-raised)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '16px',
+          padding: '48px 40px',
+          boxShadow: 'var(--shadow-md)',
+        }}>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '12px',
+            backgroundColor: 'var(--color-success-bg)',
+            border: '1px solid #c3e6c3',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 20px',
+          }}>
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path d="M2 6.5L11 13l9-6.5" stroke="var(--color-success)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <rect x="2" y="4" width="18" height="14" rx="2" stroke="var(--color-success)" strokeWidth="1.5"/>
+            </svg>
+          </div>
+          <h1 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--color-text)', margin: '0 0 10px', letterSpacing: '-0.4px' }}>
+            Check your inbox
+          </h1>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', margin: '0 0 6px', lineHeight: 1.6 }}>
+            We sent a confirmation link to
+          </p>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', margin: '0 0 24px' }}>
+            {state.message}
+          </p>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.6, margin: 0 }}>
+            Click the link in the email to activate your account, then come back to sign in.
+          </p>
+        </div>
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
+          Already confirmed?{' '}
+          <a href="/login" style={{ color: 'var(--color-text)', fontWeight: 600, textDecoration: 'none' }}>
+            Sign in →
+          </a>
+        </p>
+      </div>
+    )
+  }
+
   const inputStyle: React.CSSProperties = {
     height: '42px',
     borderRadius: '8px',

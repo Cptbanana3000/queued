@@ -48,7 +48,7 @@ export async function signup(
   }
 
   const supabase = await createClient()
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -66,9 +66,14 @@ export async function signup(
     return { success: false, message: error.message }
   }
 
-  // Supabase may require email confirmation depending on project settings.
-  // If email confirm is OFF, the user is logged in immediately → redirect.
-  // If email confirm is ON, we get no session yet → show a success message.
+  // No session means Supabase requires email confirmation before login.
+  if (!data.session) {
+    return {
+      success: true,
+      message: email,  // pass email so the UI can display it
+    }
+  }
+
   return { success: true, redirectTo: '/dashboard' }
 }
 
