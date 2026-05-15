@@ -42,3 +42,9 @@ next-env.d.ts
 
 /Guides
 
+# local tools
+/stripe-cli/
+
+# claude code local settings (may contain secrets from allowed commands)
+.claude/settings.local.json
+

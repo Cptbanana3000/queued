@@ -34,6 +34,8 @@ export interface Profile {
   full_name: string | null
   plan: Plan
   created_at: string
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
 }
 
 export interface Highlight {

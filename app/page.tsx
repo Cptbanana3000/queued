@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: 'Queued — Your waitlist, live in 60 seconds',
   description:
     'Launch a beautiful waitlist page in 60 seconds. No code, no design skills. Pick a template, fill in your details, share your link.',
+  alternates: { canonical: 'https://www.queuedapp.dev' },
 }
 
 export default async function HomePage() {
