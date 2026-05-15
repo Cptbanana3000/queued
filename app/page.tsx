@@ -26,7 +26,7 @@ export default async function HomePage() {
       <LandingBleed />
       <LandingTemplates />
       <LandingHowItWorks />
-      <LandingPricing />
+      <LandingPricing isLoggedIn={!!user} />
       <LandingFooter />
     </div>
   )

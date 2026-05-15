@@ -80,7 +80,7 @@ export default function RecentSignups({ color, mutedColor, dotColor, fontFamily 
       <span style={{ fontSize: '12px', color, fontWeight: 500 }}>
         {emails[index]}
       </span>
-      <span style={{ fontSize: '12px', color: mutedColor }}>just joined</span>
+      <span style={{ fontSize: '12px', color: mutedColor }}>secured a spot</span>
 
       {/* Ping animation keyframe via style tag */}
       <style>{`

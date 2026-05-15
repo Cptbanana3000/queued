@@ -222,7 +222,7 @@ export default function OatTemplate({
       {/* Footer */}
       <div style={{ backgroundColor: '#F2EDE4', padding: '24px 32px', textAlign: 'center', borderTop: '0.5px solid #D3D1C7' }}>
         <p style={{ fontSize: '12px', color: '#888780', margin: 0 }}>
-          Made with <a href="/" style={{ color: '#2C2C2A', fontWeight: 600, textDecoration: 'none' }}>Queued</a>
+          Built with <a href="/" style={{ color: '#2C2C2A', fontWeight: 600, textDecoration: 'none' }}>Queued</a>
         </p>
       </div>
     </div>

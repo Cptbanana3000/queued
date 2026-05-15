@@ -158,14 +158,12 @@ export default function SettingsClient({ initialName, email, plan }: ProfileForm
                   <PlanRow label="Waitlists" value="1" limit />
                   <PlanRow label="Subscribers per waitlist" value="100" limit />
                   <PlanRow label="CSV export" value="Not included" limit />
-                  <PlanRow label="Remove Queued badge" value="Not included" limit />
                 </>
               ) : (
                 <>
                   <PlanRow label="Waitlists" value="Unlimited" />
                   <PlanRow label="Subscribers" value="Unlimited" />
                   <PlanRow label="CSV export" value="Included" />
-                  <PlanRow label="Remove Queued badge" value="Included" />
                 </>
               )}
             </div>

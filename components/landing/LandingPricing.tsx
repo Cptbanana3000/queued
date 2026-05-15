@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 
 const CHECK = (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -29,10 +30,26 @@ const PRO_FEATURES = [
   { icon: CHECK, text: 'Custom domain', muted: false },
   { icon: CHECK, text: 'All 4 templates', muted: false },
   { icon: CHECK, text: 'Email export (CSV)', muted: false },
-  { icon: CHECK, text: 'Remove badge', muted: false },
 ]
 
-export default function LandingPricing() {
+export default function LandingPricing({ isLoggedIn }: { isLoggedIn?: boolean }) {
+  const [loading, setLoading] = useState(false)
+
+  const handleUpgrade = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+      let data
+      try { data = await res.json() } catch { data = null }
+      if (!res.ok) throw new Error(data?.error || `Error ${res.status}`)
+      if (data?.url) window.location.href = data.url
+    } catch (err) {
+      console.error('Checkout failed:', err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section id="pricing" className="section-pad" style={{ background: '#F7F7F5', paddingTop: '80px', paddingBottom: '80px', borderBottom: '1px solid #e8e8e8' }}>
       <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', textAlign: 'center' }}>Pricing</p>
@@ -70,7 +87,7 @@ export default function LandingPricing() {
             Most popular
           </span>
           <p style={{ fontSize: '14px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 4px' }}>Pro</p>
-          <p style={{ fontSize: '32px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 4px', letterSpacing: '-1px' }}>$9</p>
+          <p style={{ fontSize: '32px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 4px', letterSpacing: '-1px' }}>$7</p>
           <p style={{ fontSize: '13px', color: '#999', margin: '0 0 20px' }}>per month</p>
           <div style={{ height: '1px', background: '#e8e8e8', margin: '0 0 16px' }} />
           {PRO_FEATURES.map((f, i) => (
@@ -78,17 +95,34 @@ export default function LandingPricing() {
               {f.icon}{f.text}
             </div>
           ))}
-          <Link href="/signup" style={{
-            display: 'block', width: '100%', padding: '10px', borderRadius: '8px', fontSize: '13px',
-            cursor: 'pointer', marginTop: '20px', boxSizing: 'border-box', textAlign: 'center',
-            background: '#0a0a0a', border: 'none', color: '#fff', textDecoration: 'none',
-            transition: 'background 0.15s',
-          }}
-            onMouseEnter={e => (e.currentTarget.style.background = '#2e2e2c')}
-            onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0a')}
-          >
-            Get started
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={handleUpgrade}
+              disabled={loading}
+              style={{
+                display: 'block', width: '100%', padding: '10px', borderRadius: '8px', fontSize: '13px',
+                cursor: loading ? 'not-allowed' : 'pointer', marginTop: '20px', boxSizing: 'border-box', textAlign: 'center',
+                background: '#0a0a0a', border: 'none', color: '#fff', opacity: loading ? 0.7 : 1,
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#2e2e2c' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#0a0a0a' }}
+            >
+              {loading ? 'Redirecting…' : 'Upgrade to Pro'}
+            </button>
+          ) : (
+            <Link href="/signup" style={{
+              display: 'block', width: '100%', padding: '10px', borderRadius: '8px', fontSize: '13px',
+              cursor: 'pointer', marginTop: '20px', boxSizing: 'border-box', textAlign: 'center',
+              background: '#0a0a0a', border: 'none', color: '#fff', textDecoration: 'none',
+              transition: 'background 0.15s',
+            }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#2e2e2c')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#0a0a0a')}
+            >
+              Get started
+            </Link>
+          )}
         </div>
       </div>
     </section>
