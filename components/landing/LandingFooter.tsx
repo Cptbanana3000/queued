@@ -43,8 +43,20 @@ export default function LandingFooter() {
 
       {/* Bottom row */}
       <div className="footer-row">
-        <span style={{ fontSize: '12px', color: '#444' }}>© 2025 Queued. All rights reserved.</span>
-        <span style={{ fontSize: '12px', color: '#444' }}>Built with care</span>
+        <span style={{ fontSize: '12px', color: '#444' }}>© 2026 Queued. All rights reserved.</span>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          {[{ label: 'Terms', href: '/terms' }, { label: 'Privacy', href: '/privacy' }].map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              style={{ fontSize: '12px', color: '#444', textDecoration: 'none', transition: 'color 0.15s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#888')}
+              onMouseLeave={e => (e.currentTarget.style.color = '#444')}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
       </div>
     </footer>
   )
