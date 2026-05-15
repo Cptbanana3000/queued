@@ -115,7 +115,7 @@ export default function EmberTemplate({
             </p>
           )}
 
-          {showCount && (
+          {showCount && subscriberCount > 0 && (
             <p style={{ fontSize: '13px', color: '#5F5E5A', margin: '0 0 12px' }}>
               — {subscriberCount} people already waiting —
             </p>

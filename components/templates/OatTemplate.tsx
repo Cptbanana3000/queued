@@ -125,7 +125,7 @@ export default function OatTemplate({
             </p>
           )}
 
-          {showCount && (
+          {showCount && subscriberCount > 0 && (
             <p style={{ fontSize: '13px', color: '#888780', margin: '0 0 12px' }}>
               Join {subscriberCount} others already waiting
             </p>

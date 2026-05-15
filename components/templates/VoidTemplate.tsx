@@ -117,7 +117,7 @@ export default function VoidTemplate({
             </p>
           )}
 
-          {showCount && (
+          {showCount && subscriberCount > 0 && (
             <p style={{ fontSize: '12px', color: '#888', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
               — {subscriberCount} people waiting —
             </p>

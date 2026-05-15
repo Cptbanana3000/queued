@@ -83,7 +83,7 @@ export default function SlateTemplate({
             {tagline}
           </p>
 
-          {showCount && (
+          {showCount && subscriberCount > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#888780' }}>
               <div style={{ display: 'flex', marginRight: '4px' }}>
                 <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#B5D4F4', border: '2px solid #F4F4F2', marginRight: '-8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#0C447C', fontWeight: 600 }}>A</div>
