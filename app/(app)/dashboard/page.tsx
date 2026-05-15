@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   const firstName = profile?.full_name?.split(' ')[0] ?? user.email?.split('@')[0] ?? 'there'
 
   return (
-    <div style={{ padding: '36px 40px', maxWidth: '900px' }}>
+    <div className="dashboard-content">
       {/* Greeting */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{
@@ -46,12 +46,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat cards */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        gap: '14px',
-        marginBottom: '32px',
-      }}>
+      <div className="stats-grid">
         <StatCard label="Total signups" value={totalSignups} accent />
         <StatCard label="This week" value={weekSignups > 0 ? `+${weekSignups}` : '0'} />
         <StatCard label="Waitlists" value={list.length} />
@@ -118,7 +113,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
+        <div className="waitlists-grid">
           {list.map((w) => (
             <WaitlistCard
               key={w.id}

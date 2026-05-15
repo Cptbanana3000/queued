@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 
 const TEMPLATES = [
@@ -96,34 +96,45 @@ const TEMPLATES = [
 
 export default function LandingTemplates() {
   const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const onScroll = useCallback(() => {
+    const el = containerRef.current
+    if (!el) return
+    const cardWidth = (el.children[0] as HTMLElement)?.offsetWidth ?? 1
+    const index = Math.round(el.scrollLeft / (cardWidth + 14)) // 14 = gap
+    setActiveIndex(Math.min(index, TEMPLATES.length - 1))
+  }, [])
 
   return (
-    <section id="templates" style={{ background: '#F7F7F5', padding: '80px 40px', borderBottom: '1px solid #e8e8e8' }}>
-      {/* Section header */}
+    <section id="templates" className="section-pad" style={{ background: '#F7F7F5', paddingTop: '80px', paddingBottom: '80px', borderBottom: '1px solid #e8e8e8' }}>
       <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', textAlign: 'center' }}>Templates</p>
       <h2 style={{ fontSize: '32px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 8px', letterSpacing: '-0.8px', textAlign: 'center' }}>Four templates. One purpose.</h2>
       <p style={{ fontSize: '15px', color: '#666', margin: '0 auto 44px', textAlign: 'center', maxWidth: '400px' }}>Every template is fully functional out of the box. Pick one and go.</p>
 
-      {/* 2×2 grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px', maxWidth: '880px', margin: '0 auto' }}>
+      <div
+        ref={containerRef}
+        className="templates-container"
+        onScroll={onScroll}
+      >
         {TEMPLATES.map(t => (
           <div
             key={t.id}
             onMouseEnter={() => setHoveredId(t.id)}
             onMouseLeave={() => setHoveredId(null)}
             style={{
-              background: '#fff', border: `1px solid ${hoveredId === t.id ? '#0a0a0a' : '#e2e2e2'}`,
+              background: '#fff',
+              border: `1px solid ${hoveredId === t.id ? '#0a0a0a' : '#e2e2e2'}`,
               borderRadius: '14px', overflow: 'hidden', cursor: 'pointer',
               transition: 'border-color 0.2s',
             }}
           >
-            {/* Preview area */}
+            {/* Preview */}
             <div style={{ height: '220px', overflow: 'hidden', position: 'relative', background: t.previewBg }}>
-              {/* Scaled preview */}
               <div style={{ position: 'absolute', top: 0, left: 0, width: '200%', transform: 'scale(0.5)', transformOrigin: 'top left', pointerEvents: 'none' }}>
                 {t.previewContent}
               </div>
-              {/* Hover overlay */}
               <div style={{
                 position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: hoveredId === t.id ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0)',
@@ -157,6 +168,32 @@ export default function LandingTemplates() {
               <span style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '10px', ...t.tagStyle }}>{t.tag}</span>
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Dots — visible on mobile only via CSS */}
+      <div className="carousel-dots">
+        {TEMPLATES.map((t, i) => (
+          <button
+            key={t.id}
+            aria-label={`Go to ${t.name}`}
+            onClick={() => {
+              const el = containerRef.current
+              if (!el) return
+              const card = el.children[i] as HTMLElement
+              el.scrollTo({ left: card.offsetLeft - 20, behavior: 'smooth' })
+            }}
+            style={{
+              width: activeIndex === i ? '20px' : '6px',
+              height: '6px',
+              borderRadius: '3px',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              background: activeIndex === i ? '#0a0a0a' : '#d0d0d0',
+              transition: 'width 0.2s, background 0.2s',
+            }}
+          />
         ))}
       </div>
     </section>

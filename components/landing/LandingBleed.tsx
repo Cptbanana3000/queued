@@ -1,6 +1,6 @@
 export default function LandingBleed() {
   return (
-    <section style={{ background: '#1C1917', padding: '80px 40px', textAlign: 'center' }}>
+    <section className="section-pad" style={{ background: '#1C1917', paddingTop: '80px', paddingBottom: '80px', textAlign: 'center' }}>
       <p style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#EF9F27', margin: '0 0 20px' }}>
         Your page. Your vibe.
       </p>

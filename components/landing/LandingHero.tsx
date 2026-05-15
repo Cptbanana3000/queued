@@ -5,9 +5,11 @@ import Link from 'next/link'
 export default function LandingHero() {
   return (
     <section
+      className="section-pad hero-section"
       style={{
         background: '#fff',
-        padding: '100px 40px 90px',
+        paddingTop: '100px',
+        paddingBottom: '90px',
         textAlign: 'center',
         borderBottom: '1px solid #e8e8e8',
       }}

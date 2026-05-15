@@ -18,7 +18,7 @@ const STEPS = [
 
 export default function LandingHowItWorks() {
   return (
-    <section style={{ background: '#fff', padding: '80px 40px', borderBottom: '1px solid #e8e8e8' }}>
+    <section className="section-pad" style={{ background: '#fff', paddingTop: '80px', paddingBottom: '80px', borderBottom: '1px solid #e8e8e8' }}>
       <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', textAlign: 'center' }}>
         How it works
       </p>
@@ -26,13 +26,7 @@ export default function LandingHowItWorks() {
         Three steps. That&apos;s it.
       </h2>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-        gap: '40px',
-        maxWidth: '760px',
-        margin: '0 auto',
-      }}>
+      <div className="r-grid-3" style={{ maxWidth: '760px', margin: '0 auto' }}>
         {STEPS.map(step => (
           <div key={step.num}>
             <div style={{

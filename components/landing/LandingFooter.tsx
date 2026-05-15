@@ -4,12 +4,9 @@ import Link from 'next/link'
 
 export default function LandingFooter() {
   return (
-    <footer style={{ background: '#0a0a0a', padding: '32px 40px 24px' }}>
+    <footer className="section-pad" style={{ background: '#0a0a0a', paddingTop: '32px', paddingBottom: '24px' }}>
       {/* Top row */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid #222',
-      }}>
+      <div className="footer-row" style={{ marginBottom: '24px', paddingBottom: '24px', borderBottom: '1px solid #222' }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{
@@ -45,7 +42,7 @@ export default function LandingFooter() {
       </div>
 
       {/* Bottom row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="footer-row">
         <span style={{ fontSize: '12px', color: '#444' }}>© 2025 Queued. All rights reserved.</span>
         <span style={{ fontSize: '12px', color: '#444' }}>Built with care</span>
       </div>

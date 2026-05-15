@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .single()
 
   return (
-    <div style={{ display: 'flex', minHeight: '100dvh', backgroundColor: 'var(--color-surface)' }}>
+    <div className="app-shell" style={{ backgroundColor: 'var(--color-surface)' }}>
       <Sidebar
         userEmail={user.email ?? ''}
         userName={profile?.full_name ?? null}

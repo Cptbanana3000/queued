@@ -34,12 +34,12 @@ const PRO_FEATURES = [
 
 export default function LandingPricing() {
   return (
-    <section id="pricing" style={{ background: '#F7F7F5', padding: '80px 40px', borderBottom: '1px solid #e8e8e8' }}>
+    <section id="pricing" className="section-pad" style={{ background: '#F7F7F5', paddingTop: '80px', paddingBottom: '80px', borderBottom: '1px solid #e8e8e8' }}>
       <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', textAlign: 'center' }}>Pricing</p>
       <h2 style={{ fontSize: '32px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 8px', letterSpacing: '-0.8px', textAlign: 'center' }}>Simple pricing</h2>
       <p style={{ fontSize: '15px', color: '#666', margin: '0 auto 48px', textAlign: 'center', maxWidth: '340px' }}>Start free. Upgrade when you&apos;re ready.</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px', maxWidth: '540px', margin: '0 auto' }}>
+      <div className="r-grid-2" style={{ maxWidth: '540px', margin: '0 auto' }}>
         {/* Free */}
         <div style={{ background: '#fff', border: '1px solid #e8e8e8', borderRadius: '12px', padding: '28px' }}>
           <p style={{ fontSize: '14px', fontWeight: 500, color: '#0a0a0a', margin: '0 0 4px' }}>Free</p>

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import { logout } from '@/app/(auth)/actions'
 
 const NAV = [
@@ -46,26 +47,33 @@ interface SidebarProps {
 
 export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
   const pathname = usePathname()
+  const [open, setOpen] = useState(false)
+
+  // Close drawer on navigation
+  useEffect(() => { setOpen(false) }, [pathname])
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
+  // Close on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
     return pathname.startsWith(href)
   }
 
-  return (
-    <aside style={{
-      width: '220px',
-      flexShrink: 0,
-      borderRight: '1px solid var(--color-border)',
-      backgroundColor: 'var(--color-surface-raised)',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      position: 'sticky',
-      top: 0,
-    }}>
-      {/* Logo */}
-      <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--color-border)' }}>
+  const sidebarContent = (
+    <>
+      {/* Logo row */}
+      <div style={{ padding: '20px 20px 16px', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
           <span style={{
             width: '26px', height: '26px', background: 'var(--color-text)', borderRadius: '6px',
@@ -74,6 +82,15 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
           }}>Q</span>
           <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.2px' }}>Queued</span>
         </Link>
+        <button
+          className="sidebar-close-btn"
+          onClick={() => setOpen(false)}
+          aria-label="Close menu"
+        >
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
       </div>
 
       {/* Nav */}
@@ -104,7 +121,6 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
 
       {/* User footer */}
       <div style={{ padding: '12px 10px', borderTop: '1px solid var(--color-border)' }}>
-        {/* Plan badge */}
         <div style={{ padding: '0 10px', marginBottom: '10px' }}>
           <span style={{
             display: 'inline-block', fontSize: '11px', padding: '2px 8px',
@@ -116,7 +132,6 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
           </span>
         </div>
 
-        {/* Avatar + email */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '9px', padding: '6px 10px', borderRadius: '7px' }}>
           <div style={{
             width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
@@ -133,7 +148,6 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
           </div>
         </div>
 
-        {/* Logout */}
         <form action={logout}>
           <button
             type="submit"
@@ -153,6 +167,64 @@ export default function Sidebar({ userEmail, userName, plan }: SidebarProps) {
           </button>
         </form>
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Mobile top bar */}
+      <header className="mobile-header">
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+          <span style={{
+            width: '26px', height: '26px', background: 'var(--color-text)', borderRadius: '6px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '12px', fontWeight: 700, color: '#fff', fontFamily: 'var(--font-mono)',
+          }}>Q</span>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.2px' }}>Queued</span>
+        </Link>
+        <button
+          onClick={() => setOpen(true)}
+          aria-label="Open menu"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: '36px', height: '36px', border: 'none', background: 'transparent',
+            cursor: 'pointer', color: 'var(--color-text)', borderRadius: '6px', padding: 0,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M3 5h12M3 9h12M3 13h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+      </header>
+
+      {/* Overlay */}
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)',
+            zIndex: 200, backdropFilter: 'blur(2px)',
+          }}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`app-sidebar${open ? ' sidebar-open' : ''}`}
+        style={{
+          width: '220px',
+          flexShrink: 0,
+          borderRight: '1px solid var(--color-border)',
+          backgroundColor: 'var(--color-surface-raised)',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          position: 'sticky',
+          top: 0,
+        }}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   )
 }
