@@ -65,7 +65,7 @@ export default function WaitlistCard({
               {name}
             </p>
             <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: '1px 0 0' }}>
-              /w/{slug}
+              {slug}.queuedapp.dev
             </p>
           </div>
         </div>

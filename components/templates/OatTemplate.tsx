@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
 import RecentSignups from '@/components/templates/RecentSignups'
 import ReferralBox from '@/components/templates/ReferralBox'
+import { waitlistUrl } from '@/lib/waitlist-url'
 
 interface TemplateProps {
   waitlistId: string
@@ -134,7 +135,7 @@ export default function OatTemplate({
 
           {status === 'success' && refToken && (
             <ReferralBox
-              refUrl={`${window.location.origin}/w/${slug}?ref=${refToken}`}
+              refUrl={waitlistUrl(slug, refToken)}
               accentColor="#D85A30"
               textColor="#2C2C2A"
               borderColor="#D3D1C7"

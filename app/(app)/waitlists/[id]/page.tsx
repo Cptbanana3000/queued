@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import type { Template, Subscriber } from '@/lib/types'
+import { waitlistUrl } from '@/lib/waitlist-url'
 import WaitlistTabs from '@/components/dashboard/WaitlistTabs'
 import SignupsChart from '@/components/dashboard/SignupsChart'
 
@@ -111,12 +112,12 @@ export default async function WaitlistDetailPage({ params }: { params: Promise<{
             </span>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: 0 }}>
-            /w/{waitlist.slug}
+            {waitlist.slug}.queuedapp.dev
             {waitlist.published && (
               <>
                 {' · '}
                 <a
-                  href={`/w/${waitlist.slug}`}
+                  href={waitlistUrl(waitlist.slug)}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'var(--color-brand)', textDecoration: 'none' }}

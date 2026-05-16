@@ -17,19 +17,25 @@ const CROSS = (
 
 const FREE_FEATURES = [
   { icon: CHECK, text: '1 waitlist', muted: false },
-  { icon: CHECK, text: '100 signups', muted: false },
-  { icon: CHECK, text: 'Queued subdomain', muted: false },
+  { icon: CHECK, text: 'Up to 100 signups', muted: false },
+  { icon: CHECK, text: 'Referral links for subscribers', muted: false },
   { icon: CHECK, text: 'All 4 templates', muted: false },
+  { icon: CHECK, text: 'Queued subdomain', muted: false },
+  { icon: CROSS, text: 'Signups chart', muted: true },
+  { icon: CROSS, text: 'Referral analytics', muted: true },
+  { icon: CROSS, text: 'CSV export', muted: true },
   { icon: CROSS, text: 'Custom domain', muted: true },
-  { icon: CROSS, text: 'Email export', muted: true },
 ]
 
 const PRO_FEATURES = [
   { icon: CHECK, text: 'Unlimited waitlists', muted: false },
   { icon: CHECK, text: 'Unlimited signups', muted: false },
-  { icon: CHECK, text: 'Custom domain', muted: false },
+  { icon: CHECK, text: 'Referral links + analytics', muted: false },
+  { icon: CHECK, text: 'Signups over time chart', muted: false },
+  { icon: CHECK, text: 'CSV export', muted: false },
+  { icon: CHECK, text: 'Milestone email notifications', muted: false },
   { icon: CHECK, text: 'All 4 templates', muted: false },
-  { icon: CHECK, text: 'Email export (CSV)', muted: false },
+  { icon: CHECK, text: 'Custom domain', muted: false },
 ]
 
 export default function LandingPricing({ isLoggedIn }: { isLoggedIn?: boolean }) {

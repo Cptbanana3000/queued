@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
 
 const BASE = "https://www.queuedapp.dev";
+const WAITLIST_DOMAIN = "queuedapp.dev";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -20,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .eq("published", true);
 
     const waitlistRoutes: MetadataRoute.Sitemap = (waitlists ?? []).map((w) => ({
-      url: `${BASE}/w/${w.slug}`,
+      url: `https://${w.slug}.${WAITLIST_DOMAIN}`,
       lastModified: new Date(w.updated_at),
       changeFrequency: "weekly" as const,
       priority: 0.7,

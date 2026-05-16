@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { resend, FROM_EMAIL } from '@/lib/resend'
 import { PLAN_LIMITS } from '@/lib/types'
+import { waitlistUrl } from '@/lib/waitlist-url'
 
 export async function POST(
   request: Request,
@@ -104,7 +105,7 @@ async function sendMilestoneEmail(ownerId: string, waitlistName: string, slug: s
   const ownerEmail = data.user?.email
   if (!ownerEmail) return
 
-  const waitlistUrl = `https://www.queuedapp.dev/w/${slug}`
+  const waitlistLink = waitlistUrl(slug)
   const dashboardUrl = `https://www.queuedapp.dev/dashboard`
 
   await resend.emails.send({
@@ -128,7 +129,7 @@ async function sendMilestoneEmail(ownerId: string, waitlistName: string, slug: s
           View your dashboard →
         </a>
         <p style="font-size:13px;color:#888;margin:32px 0 0;line-height:1.6">
-          Your waitlist page: <a href="${waitlistUrl}" style="color:#1a1a1a">${waitlistUrl}</a>
+          Your waitlist page: <a href="${waitlistLink}" style="color:#1a1a1a">${waitlistLink}</a>
         </p>
         <hr style="border:none;border-top:1px solid #eee;margin:32px 0">
         <p style="font-size:12px;color:#aaa;margin:0">

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { Subscriber } from '@/lib/types'
 import { deleteWaitlist, toggleWaitlistPublished } from '@/app/(app)/waitlists/actions'
+import { waitlistUrl } from '@/lib/waitlist-url'
 
 interface WaitlistTabsProps {
   waitlistId: string
@@ -200,7 +201,7 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
   const [isPendingPublish, setIsPendingPublish] = useState(false)
   const [publishError, setPublishError] = useState<string | null>(null)
 
-  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/w/${slug}`
+  const shareUrl = waitlistUrl(slug)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl)
@@ -282,7 +283,7 @@ function SettingsPanel({ waitlistId, slug, published }: { waitlistId: string; sl
             {copyText}
           </button>
           <a
-            href={`/w/${slug}`}
+            href={waitlistUrl(slug)}
             target="_blank"
             rel="noopener noreferrer"
             style={{

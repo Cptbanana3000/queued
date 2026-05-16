@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import type { Template, Highlight, FaqItem } from '@/lib/types'
+import { waitlistUrl } from '@/lib/waitlist-url'
 import OatTemplate from '@/components/templates/OatTemplate'
 import SlateTemplate from '@/components/templates/SlateTemplate'
 import EmberTemplate from '@/components/templates/EmberTemplate'
@@ -30,12 +31,12 @@ export async function generateMetadata(
   return {
     title,
     description,
-    alternates: { canonical: `https://www.queuedapp.dev/w/${slug}` },
+    alternates: { canonical: waitlistUrl(slug) },
     openGraph: {
       title,
       description,
       type: 'website',
-      url: `https://www.queuedapp.dev/w/${slug}`,
+      url: waitlistUrl(slug),
     },
     twitter: { card: 'summary_large_image', title, description },
   }

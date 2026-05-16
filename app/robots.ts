@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/w/"],
+        allow: ["/", "/w/", "/*.queuedapp.dev/"],
         disallow: ["/api/", "/dashboard", "/settings", "/waitlists/"],
       },
     ],

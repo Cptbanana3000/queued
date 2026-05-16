@@ -143,18 +143,18 @@ export default function BuilderSidebar({ state, onChange }: BuilderSidebarProps)
         <div>
           <label style={labelStyle}>Slug</label>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{
-              padding: '8px 9px', fontSize: '12px', color: 'var(--color-text-muted)',
-              backgroundColor: 'var(--color-surface-inset)', border: '1px solid var(--color-border)',
-              borderRight: 'none', borderRadius: '7px 0 0 7px', whiteSpace: 'nowrap',
-            }}>/w/</span>
             <input
               value={state.slug}
               onChange={e => set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
               placeholder="my-product"
-              style={{ ...inputStyle, borderRadius: '0 7px 7px 0' }}
+              style={{ ...inputStyle, borderRadius: '7px 0 0 7px' }}
               onFocus={focusIn} onBlur={focusOut}
             />
+            <span style={{
+              padding: '8px 9px', fontSize: '12px', color: 'var(--color-text-muted)',
+              backgroundColor: 'var(--color-surface-inset)', border: '1px solid var(--color-border)',
+              borderLeft: 'none', borderRadius: '0 7px 7px 0', whiteSpace: 'nowrap',
+            }}>.queuedapp.dev</span>
           </div>
         </div>
       </div>

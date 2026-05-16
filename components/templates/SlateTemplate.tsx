@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
 import RecentSignups from '@/components/templates/RecentSignups'
 import ReferralBox from '@/components/templates/ReferralBox'
+import { waitlistUrl } from '@/lib/waitlist-url'
 
 interface TemplateProps {
   waitlistId: string
@@ -135,7 +136,7 @@ export default function SlateTemplate({
 
             {status === 'success' && refToken && (
               <ReferralBox
-                refUrl={`${window.location.origin}/w/${slug}?ref=${refToken}`}
+                refUrl={waitlistUrl(slug, refToken)}
                 accentColor="#185FA5"
                 textColor="#1a1a1a"
                 borderColor="#D3D1C7"
