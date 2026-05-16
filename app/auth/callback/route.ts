@@ -9,8 +9,23 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) {
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+
+    if (!error && data.user) {
+      // Ensure a profile row exists — covers OAuth sign-ups where no
+      // server action runs to create it. ignoreDuplicates means existing
+      // rows (email/password users) are left untouched.
+      await supabase.from('profiles').upsert(
+        {
+          id: data.user.id,
+          full_name:
+            data.user.user_metadata.full_name ??
+            data.user.user_metadata.name ??
+            null,
+        },
+        { onConflict: 'id', ignoreDuplicates: true },
+      )
+
       return NextResponse.redirect(`${origin}${next}`)
     }
   }

@@ -4,6 +4,7 @@ import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signup } from '../actions'
+import GoogleButton from '@/components/auth/GoogleButton'
 import type { ActionState } from '@/lib/types'
 
 export default function SignupPage() {
@@ -120,6 +121,16 @@ export default function SignupPage() {
           <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
             Launch your first waitlist in 60 seconds
           </p>
+        </div>
+
+        {/* Google OAuth */}
+        <GoogleButton label="Sign up with Google" />
+
+        {/* Divider */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
+          <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-border)' }} />
+          <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>or</span>
+          <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-border)' }} />
         </div>
 
         {/* Error banner */}
