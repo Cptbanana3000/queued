@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import type { Template, Subscriber } from '@/lib/types'
 import WaitlistTabs from '@/components/dashboard/WaitlistTabs'
+import SignupsChart from '@/components/dashboard/SignupsChart'
 
 export default async function WaitlistDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -51,6 +52,29 @@ export default async function WaitlistDetailPage({ params }: { params: Promise<{
       }
     })
   }
+
+  // Build last-30-days chart data — use UTC throughout so date strings
+  // match subscriber created_at values (Supabase stores timestamps as UTC).
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setUTCDate(thirtyDaysAgo.getUTCDate() - 29)
+  thirtyDaysAgo.setUTCHours(0, 0, 0, 0)
+
+  const { data: recentSubs } = await supabase
+    .from('subscribers')
+    .select('created_at')
+    .eq('waitlist_id', id)
+    .gte('created_at', thirtyDaysAgo.toISOString())
+
+  const chartData = Array.from({ length: 30 }, (_, i) => {
+    const d = new Date(thirtyDaysAgo)
+    d.setUTCDate(d.getUTCDate() + i)
+    return { date: d.toISOString().split('T')[0], signups: 0 }
+  })
+  recentSubs?.forEach(s => {
+    const dateStr = s.created_at.split('T')[0]
+    const point = chartData.find(p => p.date === dateStr)
+    if (point) point.signups++
+  })
 
   const subs = (subscribers ?? []).map(s => ({
     ...s,
@@ -127,6 +151,11 @@ export default async function WaitlistDetailPage({ params }: { params: Promise<{
         <MiniStat label="Total signups" value={Number(waitlist.subscriber_count ?? 0)} accent />
         <MiniStat label="Today" value={Number(waitlist.today_count ?? 0)} />
         <MiniStat label="This week" value={Number(waitlist.week_count ?? 0)} />
+      </div>
+
+      {/* Signups chart */}
+      <div style={{ marginBottom: '28px' }}>
+        <SignupsChart data={chartData} plan={plan} />
       </div>
 
       {/* Tabs */}
