@@ -1,15 +1,37 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
+const ROOT_DOMAIN = 'queuedapp.dev'
+
 /**
  * Next.js 16 Proxy — runs on every matched route before rendering.
  *
  * Responsibilities:
- * 1. Refresh the Supabase session cookie (critical — must happen on every request)
- * 2. Redirect unauthenticated users away from protected routes → /login
- * 3. Redirect authenticated users away from auth pages → /dashboard
+ * 1. Rewrite [slug].queuedapp.dev → /w/[slug] for public waitlist subdomains
+ * 2. Refresh the Supabase session cookie (critical — must happen on every request)
+ * 3. Redirect unauthenticated users away from protected routes → /login
+ * 4. Redirect authenticated users away from auth pages → /dashboard
  */
 export default async function proxy(request: NextRequest) {
+  const hostname = request.headers.get('host') ?? ''
+
+  // ── Subdomain routing ─────────────────────────────────────────────
+  // [slug].queuedapp.dev → rewrite root path to /w/[slug] internally.
+  // Public waitlist pages need no auth, so return early before Supabase.
+  if (
+    hostname.endsWith(`.${ROOT_DOMAIN}`) &&
+    !hostname.startsWith('www.')
+  ) {
+    const slug = hostname.replace(`.${ROOT_DOMAIN}`, '')
+    if (request.nextUrl.pathname === '/') {
+      const url = request.nextUrl.clone()
+      url.pathname = `/w/${slug}`
+      return NextResponse.rewrite(url)
+    }
+    // All other paths on the subdomain (API routes etc.) pass through
+    return NextResponse.next()
+  }
+
   // We need to mutate the response cookies, so we start with a base response
   // that passes the request through, then we may replace it with a redirect.
   let supabaseResponse = NextResponse.next({ request })
