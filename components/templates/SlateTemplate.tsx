@@ -3,9 +3,12 @@
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
 import RecentSignups from '@/components/templates/RecentSignups'
+import ReferralBox from '@/components/templates/ReferralBox'
 
 interface TemplateProps {
   waitlistId: string
+  slug: string
+  referredBy: string | null
   name: string
   tagline: string
   buttonText: string
@@ -19,6 +22,8 @@ interface TemplateProps {
 
 export default function SlateTemplate({
   waitlistId,
+  slug,
+  referredBy,
   name,
   tagline,
   buttonText,
@@ -32,6 +37,7 @@ export default function SlateTemplate({
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [refToken, setRefToken] = useState<string | null>(null)
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
@@ -44,12 +50,13 @@ export default function SlateTemplate({
       const res = await fetch(`/api/waitlists/${waitlistId}/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ref: referredBy }),
       })
       const data = await res.json()
       if (res.ok) {
         setStatus('success')
         setMessage("You're on the list!")
+        setRefToken(data.refToken ?? null)
         setEmail('')
       } else {
         setStatus('error')
@@ -124,6 +131,16 @@ export default function SlateTemplate({
               <p style={{ fontSize: '13px', color: status === 'success' ? '#185FA5' : '#d32f2f', margin: '12px 0 0', textAlign: 'center', fontWeight: 500 }}>
                 {message}
               </p>
+            )}
+
+            {status === 'success' && refToken && (
+              <ReferralBox
+                refUrl={`${window.location.origin}/w/${slug}?ref=${refToken}`}
+                accentColor="#185FA5"
+                textColor="#1a1a1a"
+                borderColor="#D3D1C7"
+                labelColor="#6b7280"
+              />
             )}
             {!message && (
                <p style={{ fontSize: '12px', color: '#888780', textAlign: 'center', margin: '12px 0 0' }}>

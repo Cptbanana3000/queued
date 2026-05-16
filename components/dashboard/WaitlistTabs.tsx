@@ -80,15 +80,17 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
     )
   }
 
+  const showReferrals = plan === 'pro'
+
   return (
     <div>
-      {/* Export button (Pro only) */}
+      {/* Pro actions row */}
       {plan === 'pro' && (
         <div style={{ marginBottom: '16px', textAlign: 'right' }}>
           <button
             onClick={() => {
-              const csv = ['Position,Email,Joined']
-                .concat(subscribers.map(s => `${s.position},${s.email},${s.created_at}`))
+              const csv = ['Position,Email,Joined,Referrals']
+                .concat(subscribers.map(s => `${s.position},${s.email},${s.created_at},${s.referral_count ?? 0}`))
                 .join('\n')
               const blob = new Blob([csv], { type: 'text/csv' })
               const url = URL.createObjectURL(blob)
@@ -113,6 +115,30 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
         </div>
       )}
 
+      {/* Referral stats upsell for free plan */}
+      {plan !== 'pro' && (
+        <div style={{
+          marginBottom: '16px', padding: '12px 16px', borderRadius: '8px',
+          backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-border)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px',
+        }}>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: 0 }}>
+            Referral counts per subscriber are a <strong style={{ color: 'var(--color-text)' }}>Pro</strong> feature.
+          </p>
+          <a
+            href="/settings"
+            style={{
+              fontSize: '12px', fontWeight: 600, color: 'var(--color-text)',
+              textDecoration: 'none', whiteSpace: 'nowrap',
+              padding: '5px 12px', borderRadius: '6px',
+              border: '1px solid var(--color-border)',
+            }}
+          >
+            Upgrade →
+          </a>
+        </div>
+      )}
+
       {/* Table */}
       <div style={{
         backgroundColor: 'var(--color-surface-raised)', border: '1px solid var(--color-border)',
@@ -124,6 +150,9 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
               <th style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 500, color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>#</th>
               <th style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 500, color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Email</th>
               <th style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 500, color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Joined</th>
+              {showReferrals && (
+                <th style={{ padding: '10px 16px', textAlign: 'left', fontWeight: 500, color: 'var(--color-text-muted)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.3px' }}>Referrals</th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -138,6 +167,21 @@ function SubscribersPanel({ subscribers, plan }: { subscribers: Subscriber[]; pl
                 <td style={{ padding: '10px 16px', color: 'var(--color-text-muted)', fontSize: '12px' }}>
                   {new Date(s.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </td>
+                {showReferrals && (
+                  <td style={{ padding: '10px 16px', fontSize: '12px' }}>
+                    {(s.referral_count ?? 0) > 0 ? (
+                      <span style={{
+                        fontWeight: 600, color: 'var(--color-text)',
+                        backgroundColor: 'var(--color-surface-inset)',
+                        padding: '2px 8px', borderRadius: '10px',
+                      }}>
+                        {s.referral_count}
+                      </span>
+                    ) : (
+                      <span style={{ color: 'var(--color-text-muted)' }}>—</span>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

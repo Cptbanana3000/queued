@@ -18,6 +18,7 @@ export const PLAN_LIMITS = {
     customDomain: false,
     removeBadge: false,
     csvExport: false,
+    referralStats: false,
   },
   pro: {
     maxWaitlists: Infinity,
@@ -25,6 +26,7 @@ export const PLAN_LIMITS = {
     customDomain: true,
     removeBadge: true,
     csvExport: true,
+    referralStats: true,
   },
 } as const
 
@@ -74,6 +76,10 @@ export interface Subscriber {
   email: string
   position: number
   created_at: string
+  ref_token: string
+  referred_by: string | null
+  // Computed by the dashboard page (not a DB column)
+  referral_count?: number
 }
 
 // ── Form state types ──────────────────────────────────────────────

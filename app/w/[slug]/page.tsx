@@ -41,8 +41,15 @@ export async function generateMetadata(
   }
 }
 
-export default async function PublicWaitlistPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PublicWaitlistPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ ref?: string }>
+}) {
   const { slug } = await params
+  const { ref } = await searchParams
   const supabase = await createClient()
 
   const { data: waitlist, error } = await supabase
@@ -62,6 +69,8 @@ export default async function PublicWaitlistPage({ params }: { params: Promise<{
 
   const props = {
     waitlistId: waitlist.id,
+    slug,
+    referredBy: ref ?? null,
     name: waitlist.name,
     tagline: waitlist.tagline ?? '',
     buttonText: waitlist.button_text,

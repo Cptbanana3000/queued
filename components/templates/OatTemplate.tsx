@@ -3,9 +3,12 @@
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
 import RecentSignups from '@/components/templates/RecentSignups'
+import ReferralBox from '@/components/templates/ReferralBox'
 
 interface TemplateProps {
   waitlistId: string
+  slug: string
+  referredBy: string | null
   name: string
   tagline: string
   buttonText: string
@@ -19,6 +22,8 @@ interface TemplateProps {
 
 export default function OatTemplate({
   waitlistId,
+  slug,
+  referredBy,
   name,
   tagline,
   buttonText,
@@ -32,6 +37,7 @@ export default function OatTemplate({
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [refToken, setRefToken] = useState<string | null>(null)
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
@@ -44,12 +50,13 @@ export default function OatTemplate({
       const res = await fetch(`/api/waitlists/${waitlistId}/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ref: referredBy }),
       })
       const data = await res.json()
       if (res.ok) {
         setStatus('success')
         setMessage("You're on the list!")
+        setRefToken(data.refToken ?? null)
         setEmail('')
       } else {
         setStatus('error')
@@ -123,6 +130,16 @@ export default function OatTemplate({
             <p style={{ fontSize: '13px', color: status === 'success' ? '#D85A30' : '#d32f2f', margin: '0 0 12px', fontWeight: 500 }}>
               {message}
             </p>
+          )}
+
+          {status === 'success' && refToken && (
+            <ReferralBox
+              refUrl={`${window.location.origin}/w/${slug}?ref=${refToken}`}
+              accentColor="#D85A30"
+              textColor="#2C2C2A"
+              borderColor="#D3D1C7"
+              labelColor="#888780"
+            />
           )}
 
           {showCount && subscriberCount > 0 && (

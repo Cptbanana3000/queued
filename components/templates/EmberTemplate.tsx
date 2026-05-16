@@ -3,9 +3,12 @@
 import { useState } from 'react'
 import type { Highlight, FaqItem } from '@/lib/types'
 import RecentSignups from '@/components/templates/RecentSignups'
+import ReferralBox from '@/components/templates/ReferralBox'
 
 interface TemplateProps {
   waitlistId: string
+  slug: string
+  referredBy: string | null
   name: string
   tagline: string
   buttonText: string
@@ -19,6 +22,8 @@ interface TemplateProps {
 
 export default function EmberTemplate({
   waitlistId,
+  slug,
+  referredBy,
   name,
   tagline,
   buttonText,
@@ -32,6 +37,7 @@ export default function EmberTemplate({
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
+  const [refToken, setRefToken] = useState<string | null>(null)
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
@@ -44,12 +50,13 @@ export default function EmberTemplate({
       const res = await fetch(`/api/waitlists/${waitlistId}/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, ref: referredBy }),
       })
       const data = await res.json()
       if (res.ok) {
         setStatus('success')
         setMessage("You're on the list!")
+        setRefToken(data.refToken ?? null)
         setEmail('')
       } else {
         setStatus('error')
@@ -113,6 +120,16 @@ export default function EmberTemplate({
             <p style={{ fontSize: '14px', color: status === 'success' ? '#EF9F27' : '#ef4444', margin: '0 0 16px', fontWeight: 500 }}>
               {message}
             </p>
+          )}
+
+          {status === 'success' && refToken && (
+            <ReferralBox
+              refUrl={`${window.location.origin}/w/${slug}?ref=${refToken}`}
+              accentColor="#EF9F27"
+              textColor="#FAF7F2"
+              borderColor="#444441"
+              labelColor="#9CA3AF"
+            />
           )}
 
           {showCount && subscriberCount > 0 && (

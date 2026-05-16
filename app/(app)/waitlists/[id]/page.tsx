@@ -35,7 +35,27 @@ export default async function WaitlistDetailPage({ params }: { params: Promise<{
     .single()
 
   const plan = (profile?.plan as 'free' | 'pro') ?? 'free'
-  const subs = (subscribers ?? []) as Subscriber[]
+
+  // For Pro: compute how many signups each subscriber's ref_token has generated
+  const referralCountMap = new Map<string, number>()
+  if (plan === 'pro' && (subscribers ?? []).length > 0) {
+    const { data: referred } = await supabase
+      .from('subscribers')
+      .select('referred_by')
+      .eq('waitlist_id', id)
+      .not('referred_by', 'is', null)
+
+    referred?.forEach(r => {
+      if (r.referred_by) {
+        referralCountMap.set(r.referred_by, (referralCountMap.get(r.referred_by) ?? 0) + 1)
+      }
+    })
+  }
+
+  const subs = (subscribers ?? []).map(s => ({
+    ...s,
+    referral_count: plan === 'pro' ? (referralCountMap.get(s.ref_token) ?? 0) : undefined,
+  })) as Subscriber[]
 
   const TEMPLATE_LABELS: Record<Template, { name: string; color: string; bg: string }> = {
     oat:   { name: 'Oat',   color: '#712B13', bg: '#F2EDE4' },

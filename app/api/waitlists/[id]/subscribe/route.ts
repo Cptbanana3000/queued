@@ -8,7 +8,7 @@ export async function POST(
 ) {
   try {
     const { id } = await params
-    const { email } = await request.json()
+    const { email, ref } = await request.json()
 
     if (!email || !email.includes('@')) {
       return NextResponse.json({ error: 'Invalid email address.' }, { status: 400 })
@@ -19,7 +19,7 @@ export async function POST(
     // 1. Get the waitlist and user's plan to check limits
     const { data: waitlist, error: waitlistError } = await supabase
       .from('waitlists')
-      .select('user_id, published')
+      .select('user_id, published, slug')
       .eq('id', id)
       .single()
 
@@ -50,22 +50,39 @@ export async function POST(
       return NextResponse.json({ error: 'This waitlist is currently full.' }, { status: 403 })
     }
 
-    // 4. Insert subscriber (relies on DB trigger to set position)
+    // 4. Validate the referral token — must belong to an existing subscriber on this waitlist
+    let referredBy: string | null = null
+    if (ref && typeof ref === 'string' && ref.length > 0) {
+      const { data: referrer } = await supabase
+        .from('subscribers')
+        .select('ref_token')
+        .eq('waitlist_id', id)
+        .eq('ref_token', ref)
+        .single()
+      if (referrer) referredBy = ref
+    }
+
+    // 5. Generate a unique referral token for this new subscriber
+    const refToken = crypto.randomUUID().replace(/-/g, '').slice(0, 12)
+
+    // 6. Insert subscriber (DB trigger sets position)
     const { error: insertError } = await supabase
       .from('subscribers')
       .insert({
         waitlist_id: id,
         email: email.trim().toLowerCase(),
+        ref_token: refToken,
+        referred_by: referredBy,
       })
 
     if (insertError) {
       if (insertError.message.includes('unique') || insertError.message.includes('duplicate')) {
-         return NextResponse.json({ error: 'You are already on the list!' }, { status: 400 })
+        return NextResponse.json({ error: 'You are already on the list!' }, { status: 400 })
       }
       return NextResponse.json({ error: 'Failed to join waitlist.' }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, refToken })
 
   } catch (err) {
     return NextResponse.json({ error: 'Internal server error.' }, { status: 500 })
