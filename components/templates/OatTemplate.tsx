@@ -35,7 +35,7 @@ export default function OatTemplate({
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (!email) return
     setStatus('loading')
@@ -64,7 +64,7 @@ export default function OatTemplate({
   return (
     <div style={{ fontFamily: 'var(--font-sans)', color: '#2C2C2A', minHeight: '100dvh', backgroundColor: '#FAF7F2' }}>
       {/* Hero */}
-      <div style={{ padding: '80px 32px 60px', textAlign: 'center' }}>
+      <div className="tmpl-hero" style={{ padding: '80px 32px 60px', textAlign: 'center' }}>
         <div style={{
           width: '48px', height: '48px', backgroundColor: '#2C2C2A', borderRadius: '12px',
           display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px',
@@ -92,7 +92,7 @@ export default function OatTemplate({
         </p>
 
         <form onSubmit={handleSubmit} style={{ maxWidth: '340px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+          <div className="tmpl-form-row" style={{ marginBottom: '12px' }}>
             <input
               type="email"
               required
@@ -141,7 +141,7 @@ export default function OatTemplate({
 
       {/* Highlights */}
       {highlights && highlights.length > 0 && (
-        <div style={{ backgroundColor: '#F2EDE4', padding: '60px 32px', borderTop: '1px solid #D3D1C7' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#F2EDE4', padding: '60px 32px', borderTop: '1px solid #D3D1C7' }}>
           <div style={{ maxWidth: '480px', margin: '0 auto' }}>
             <p style={{ fontSize: '11px', color: '#D85A30', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 6px', fontWeight: 600 }}>
               Why it matters
@@ -179,7 +179,7 @@ export default function OatTemplate({
 
       {/* FAQ */}
       {faq && faq.length > 0 && (
-        <div style={{ backgroundColor: '#FAF7F2', padding: '60px 32px' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#FAF7F2', padding: '60px 32px' }}>
           <div style={{ maxWidth: '480px', margin: '0 auto' }}>
             <p style={{ fontSize: '11px', color: '#D85A30', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 6px', fontWeight: 600 }}>
               Questions

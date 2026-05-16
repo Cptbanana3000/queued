@@ -35,7 +35,7 @@ export default function EmberTemplate({
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (!email) return
     setStatus('loading')
@@ -64,7 +64,7 @@ export default function EmberTemplate({
   return (
     <div style={{ fontFamily: 'var(--font-sans)', color: '#FAF7F2', minHeight: '100dvh', backgroundColor: '#1C1917' }}>
       {/* Hero */}
-      <div style={{ padding: '80px 32px 60px', textAlign: 'center' }}>
+      <div className="tmpl-hero" style={{ padding: '80px 32px 60px', textAlign: 'center' }}>
         {comingSoon && (
           <p style={{ fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: '#EF9F27', margin: '0 0 16px', fontWeight: 600 }}>
             The waitlist is open
@@ -82,7 +82,7 @@ export default function EmberTemplate({
         <div style={{ width: '40px', height: '1px', background: '#EF9F27', margin: '0 auto 24px' }} />
 
         <form onSubmit={handleSubmit} style={{ maxWidth: '360px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+          <div className="tmpl-form-row" style={{ marginBottom: '16px' }}>
             <input
               type="email"
               required
@@ -131,7 +131,7 @@ export default function EmberTemplate({
 
       {/* Highlights */}
       {highlights && highlights.length > 0 && (
-        <div style={{ backgroundColor: '#231F1C', padding: '80px 32px', borderTop: '1px solid #333' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#231F1C', padding: '80px 32px', borderTop: '1px solid #333' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             <p style={{ fontSize: '11px', color: '#EF9F27', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               Why {name}
@@ -164,7 +164,7 @@ export default function EmberTemplate({
 
       {/* FAQ */}
       {faq && faq.length > 0 && (
-        <div style={{ backgroundColor: '#1C1917', padding: '80px 32px' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#1C1917', padding: '80px 32px' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             <p style={{ fontSize: '11px', color: '#EF9F27', letterSpacing: '1.5px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               Questions

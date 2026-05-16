@@ -35,7 +35,7 @@ export default function SlateTemplate({
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (!email) return
     setStatus('loading')
@@ -64,7 +64,7 @@ export default function SlateTemplate({
   return (
     <div style={{ fontFamily: 'var(--font-sans)', color: '#1a1a1a', minHeight: '100dvh', backgroundColor: '#F4F4F2' }}>
       {/* Hero */}
-      <div style={{ padding: '80px 32px 60px', maxWidth: '800px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'center' }}>
+      <div className="slate-hero tmpl-hero" style={{ padding: '80px 32px 60px', maxWidth: '800px', margin: '0 auto' }}>
         <div>
           {comingSoon && (
             <span style={{
@@ -141,7 +141,7 @@ export default function SlateTemplate({
 
       {/* Highlights */}
       {highlights && highlights.length > 0 && (
-        <div style={{ backgroundColor: '#fff', padding: '60px 32px', borderTop: '1px solid #e8e8e8' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#fff', padding: '60px 32px', borderTop: '1px solid #e8e8e8' }}>
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
             <p style={{ fontSize: '12px', color: '#185FA5', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               Features
@@ -169,7 +169,7 @@ export default function SlateTemplate({
 
       {/* FAQ */}
       {faq && faq.length > 0 && (
-        <div style={{ backgroundColor: '#F4F4F2', padding: '60px 32px' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#F4F4F2', padding: '60px 32px' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             <p style={{ fontSize: '12px', color: '#185FA5', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               FAQ

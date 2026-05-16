@@ -352,3 +352,77 @@ body {
     gap: 16px;
   }
 }
+
+/* ── Template responsive ─────────────────────────────────── */
+
+/* Slate: 2-col hero grid */
+.slate-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* All templates: inline form row (input + button) */
+.tmpl-form-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Void: outer bordered form wrapper */
+.void-form-wrap {
+  display: flex;
+  border: 2px solid #000;
+}
+
+@media (max-width: 640px) {
+  /* Hero sections: cut vertical padding, tighten horizontal */
+  .tmpl-hero {
+    padding-top: 52px !important;
+    padding-bottom: 40px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Content sections */
+  .tmpl-section {
+    padding-top: 48px !important;
+    padding-bottom: 48px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Slate hero: collapse to single column */
+  .slate-hero {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  /* Form row: stack input above button */
+  .tmpl-form-row {
+    flex-direction: column;
+  }
+  .tmpl-form-row > input,
+  .tmpl-form-row > button {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Void form: drop shared border, give each element its own */
+  .void-form-wrap {
+    flex-direction: column;
+    border: none !important;
+  }
+  .void-form-wrap > input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: 2px solid #000 !important;
+    border-right: 2px solid #000 !important;
+  }
+  .void-form-wrap > button {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border: 2px solid #000 !important;
+    margin-top: 8px;
+  }
+}

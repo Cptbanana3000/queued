@@ -35,7 +35,7 @@ export default function VoidTemplate({
 
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     if (!email) return
     setStatus('loading')
@@ -64,7 +64,7 @@ export default function VoidTemplate({
   return (
     <div style={{ fontFamily: 'var(--font-mono)', color: '#000', minHeight: '100dvh', backgroundColor: '#fff' }}>
       {/* Hero */}
-      <div style={{ padding: '100px 32px 80px', textAlign: 'center', borderBottom: '2px solid #000' }}>
+      <div className="tmpl-hero" style={{ padding: '100px 32px 80px', textAlign: 'center', borderBottom: '2px solid #000' }}>
         {comingSoon && (
           <div style={{
             border: '1px solid #000', display: 'inline-block', padding: '4px 12px',
@@ -83,7 +83,7 @@ export default function VoidTemplate({
         </p>
 
         <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', border: '2px solid #000', marginBottom: '16px' }}>
+          <div className="void-form-wrap" style={{ marginBottom: '16px' }}>
             <input
               type="email"
               required
@@ -136,7 +136,7 @@ export default function VoidTemplate({
 
       {/* Highlights */}
       {highlights && highlights.length > 0 && (
-        <div style={{ backgroundColor: '#F5F5F5', padding: '80px 32px', borderBottom: '2px solid #000' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#F5F5F5', padding: '80px 32px', borderBottom: '2px solid #000' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             <p style={{ fontSize: '12px', color: '#888', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               What you get
@@ -171,7 +171,7 @@ export default function VoidTemplate({
 
       {/* FAQ */}
       {faq && faq.length > 0 && (
-        <div style={{ backgroundColor: '#fff', padding: '80px 32px', borderBottom: '2px solid #000' }}>
+        <div className="tmpl-section" style={{ backgroundColor: '#fff', padding: '80px 32px', borderBottom: '2px solid #000' }}>
           <div style={{ maxWidth: '600px', margin: '0 auto' }}>
             <p style={{ fontSize: '12px', color: '#888', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 8px', fontWeight: 600 }}>
               Questions
