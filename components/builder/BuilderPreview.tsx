@@ -24,6 +24,8 @@ export default function BuilderPreview({ state }: BuilderPreviewProps) {
     <div style={{ flex: 1, overflowY: 'auto', height: '100%' }}>
       <Component
         waitlistId="__preview__"
+        slug=""
+        referredBy={null}
         name={state.name || 'Your product name'}
         tagline={state.tagline || 'A punchy one-line tagline that explains what you do.'}
         buttonText={state.buttonText || 'Join waitlist'}
