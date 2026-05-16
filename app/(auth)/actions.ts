@@ -77,6 +77,47 @@ export async function signup(
   return { success: true, redirectTo: '/dashboard' }
 }
 
+// ── Request password reset ────────────────────────────────────────
+export async function requestPasswordReset(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const email = (formData.get('email') as string | null)?.trim() ?? ''
+  if (!email) return { success: false, message: 'Email is required.' }
+
+  const supabase = await createClient()
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${appUrl}/auth/callback?next=/reset-password`,
+  })
+
+  if (error) return { success: false, message: error.message }
+
+  // Always return success to avoid leaking whether an email exists
+  return { success: true, message: email }
+}
+
+// ── Reset password (called after email link → callback → session) ──
+export async function resetPassword(
+  _prevState: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  const password        = (formData.get('password')         as string | null) ?? ''
+  const confirmPassword = (formData.get('confirm_password') as string | null) ?? ''
+
+  if (!password) return { success: false, message: 'Password is required.' }
+  if (password.length < 8) return { success: false, message: 'Password must be at least 8 characters.' }
+  if (password !== confirmPassword) return { success: false, message: 'Passwords do not match.' }
+
+  const supabase = await createClient()
+  const { error } = await supabase.auth.updateUser({ password })
+
+  if (error) return { success: false, message: error.message }
+
+  return { success: true, redirectTo: '/dashboard' }
+}
+
 // ── Logout ────────────────────────────────────────────────────────
 export async function logout(): Promise<void> {
   const supabase = await createClient()

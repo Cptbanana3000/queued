@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState, useState } from 'react'
-import { updateProfile } from './actions'
+import { updateProfile, changePassword } from './actions'
 import type { ActionState } from '@/lib/types'
 
 interface ProfileFormProps {
@@ -13,6 +13,9 @@ interface ProfileFormProps {
 export default function SettingsClient({ initialName, email, plan }: ProfileFormProps) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     updateProfile, undefined,
+  )
+  const [pwState, pwFormAction, pwPending] = useActionState<ActionState, FormData>(
+    changePassword, undefined,
   )
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [isManaging, setIsManaging] = useState(false)
@@ -130,6 +133,88 @@ export default function SettingsClient({ initialName, email, plan }: ProfileForm
             }}
           >
             {pending ? 'Saving…' : 'Save changes'}
+          </button>
+        </form>
+      </div>
+
+      {/* Password section */}
+      <div style={cardStyle}>
+        <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: '0 0 4px' }}>
+          Password
+        </h2>
+        <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: '0 0 20px' }}>
+          Update your account password.
+        </p>
+
+        <form action={pwFormAction}>
+          <div style={{ marginBottom: '14px' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text)', display: 'block', marginBottom: '5px' }}>
+              Current password
+            </label>
+            <input
+              name="current_password"
+              type="password"
+              autoComplete="current-password"
+              required
+              placeholder="••••••••"
+              style={inputStyle}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--color-text)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+
+          <div style={{ marginBottom: '14px' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text)', display: 'block', marginBottom: '5px' }}>
+              New password
+            </label>
+            <input
+              name="new_password"
+              type="password"
+              autoComplete="new-password"
+              required
+              minLength={8}
+              placeholder="Min. 8 characters"
+              style={inputStyle}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--color-text)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text)', display: 'block', marginBottom: '5px' }}>
+              Confirm new password
+            </label>
+            <input
+              name="confirm_password"
+              type="password"
+              autoComplete="new-password"
+              required
+              placeholder="••••••••"
+              style={inputStyle}
+              onFocus={e => (e.currentTarget.style.borderColor = 'var(--color-text)')}
+              onBlur={e => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            />
+          </div>
+
+          {pwState && (
+            <p style={{
+              fontSize: '13px', margin: '0 0 14px', fontWeight: 500,
+              color: pwState.success ? 'var(--color-success)' : 'var(--color-danger)',
+            }}>
+              {pwState.success ? '✓ ' : ''}{pwState.message}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={pwPending}
+            style={{
+              padding: '9px 20px', borderRadius: '7px', fontSize: '13px', fontWeight: 500,
+              border: 'none', backgroundColor: 'var(--color-text)', color: '#fff',
+              cursor: pwPending ? 'not-allowed' : 'pointer', opacity: pwPending ? 0.6 : 1,
+            }}
+          >
+            {pwPending ? 'Updating…' : 'Update password'}
           </button>
         </form>
       </div>

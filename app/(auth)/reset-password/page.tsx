@@ -2,14 +2,13 @@
 
 import { useActionState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { login } from '../actions'
+import { resetPassword } from '../actions'
 import type { ActionState } from '@/lib/types'
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter()
   const [state, action, pending] = useActionState<ActionState, FormData>(
-    login,
+    resetPassword,
     undefined,
   )
 
@@ -21,7 +20,6 @@ export default function LoginPage() {
 
   return (
     <div style={{ width: '100%', maxWidth: '400px' }}>
-      {/* Card */}
       <div
         style={{
           backgroundColor: 'var(--color-surface-raised)',
@@ -31,25 +29,15 @@ export default function LoginPage() {
           boxShadow: 'var(--shadow-md)',
         }}
       >
-        {/* Header */}
         <div style={{ marginBottom: '32px' }}>
-          <h1
-            style={{
-              fontSize: '22px',
-              fontWeight: '700',
-              letterSpacing: '-0.5px',
-              color: 'var(--color-text)',
-              marginBottom: '6px',
-            }}
-          >
-            Welcome back
+          <h1 style={{ fontSize: '22px', fontWeight: 700, letterSpacing: '-0.5px', color: 'var(--color-text)', marginBottom: '6px' }}>
+            Set new password
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
-            Sign in to your Queued account
+            Choose a strong password for your account.
           </p>
         </div>
 
-        {/* Error banner */}
         {state && !state.success && (
           <div
             role="alert"
@@ -75,24 +63,23 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Form */}
         <form action={action} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-          {/* Email */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <label
-              htmlFor="login-email"
+              htmlFor="reset-password"
               style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text)' }}
             >
-              Email
+              New password
             </label>
             <input
-              id="login-email"
-              name="email"
-              type="email"
-              autoComplete="email"
+              id="reset-password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
               autoFocus
               required
-              placeholder="you@example.com"
+              minLength={8}
+              placeholder="Min. 8 characters"
               style={{
                 height: '42px',
                 borderRadius: '8px',
@@ -111,27 +98,18 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Password */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <label
-                htmlFor="login-password"
-                style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text)' }}
-              >
-                Password
-              </label>
-              <Link
-                href="/forgot-password"
-                style={{ fontSize: '12px', color: 'var(--color-text-secondary)', textDecoration: 'none' }}
-              >
-                Forgot password?
-              </Link>
-            </div>
+            <label
+              htmlFor="reset-confirm-password"
+              style={{ fontSize: '13px', fontWeight: '500', color: 'var(--color-text)' }}
+            >
+              Confirm new password
+            </label>
             <input
-              id="login-password"
-              name="password"
+              id="reset-confirm-password"
+              name="confirm_password"
               type="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               required
               placeholder="••••••••"
               style={{
@@ -152,7 +130,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={pending}
@@ -165,45 +142,19 @@ export default function LoginPage() {
               fontSize: '14px',
               fontWeight: '600',
               cursor: pending ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.15s, transform 0.1s',
+              transition: 'background-color 0.15s',
               letterSpacing: '-0.1px',
               fontFamily: 'var(--font-sans)',
               marginTop: '4px',
               width: '100%',
             }}
-            onMouseEnter={e => {
-              if (!pending) e.currentTarget.style.backgroundColor = '#2e2e2c'
-            }}
-            onMouseLeave={e => {
-              if (!pending) e.currentTarget.style.backgroundColor = 'var(--color-text)'
-            }}
+            onMouseEnter={e => { if (!pending) e.currentTarget.style.backgroundColor = '#2e2e2c' }}
+            onMouseLeave={e => { if (!pending) e.currentTarget.style.backgroundColor = 'var(--color-text)' }}
           >
-            {pending ? 'Signing in…' : 'Sign in'}
+            {pending ? 'Updating…' : 'Update password'}
           </button>
         </form>
       </div>
-
-      {/* Footer link */}
-      <p
-        style={{
-          textAlign: 'center',
-          marginTop: '20px',
-          fontSize: '13px',
-          color: 'var(--color-text-secondary)',
-        }}
-      >
-        Don&apos;t have an account?{' '}
-        <Link
-          href="/signup"
-          style={{
-            color: 'var(--color-text)',
-            fontWeight: '600',
-            textDecoration: 'none',
-          }}
-        >
-          Create one →
-        </Link>
-      </p>
     </div>
   )
 }
