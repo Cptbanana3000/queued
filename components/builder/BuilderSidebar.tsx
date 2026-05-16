@@ -13,9 +13,10 @@ const TEMPLATE_COLORS: Record<Template, string> = {
 interface BuilderSidebarProps {
   state: BuilderState
   onChange: (next: BuilderState) => void
+  fullWidth?: boolean
 }
 
-export default function BuilderSidebar({ state, onChange }: BuilderSidebarProps) {
+export default function BuilderSidebar({ state, onChange, fullWidth }: BuilderSidebarProps) {
   const set = <K extends keyof BuilderState>(key: K, val: BuilderState[K]) =>
     onChange({ ...state, [key]: val })
 
@@ -71,7 +72,8 @@ export default function BuilderSidebar({ state, onChange }: BuilderSidebarProps)
 
   return (
     <div style={{
-      width: '300px', flexShrink: 0, borderRight: '1px solid var(--color-border)',
+      width: fullWidth ? '100%' : '300px', flexShrink: 0,
+      borderRight: fullWidth ? 'none' : '1px solid var(--color-border)',
       backgroundColor: 'var(--color-surface-raised)', overflowY: 'auto', height: '100%',
     }}>
 
